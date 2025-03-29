@@ -1,5 +1,6 @@
 {% extends "base.html" %}
-{% block title %} Home {% endblock %}
+{% block title %}Register{% endblock %}
+ 
 {% block navbar %}
 <div class="collapse navbar-collapse" id="navbarNav">
     <ul class="navbar-nav ms-auto">
@@ -7,7 +8,7 @@
             <a class="nav-link" href="{%url 'home'%}">Home</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link" href=" {%url 'sign_in'%} ">Sign in</a>
+            <a class="nav-link" href=" {%url 'login'%} ">Sign in</a>
         </li>
         <li class="nav-item">
             <a class="nav-link" href="{%url 'sign_up'%}">Sign up</a>
@@ -17,6 +18,5 @@
 {% endblock %}
 
 {% block content %}
-<h1>Hallo from HOME</h1>
+<h1>Hallo from REGISTER</h1>
 {% endblock %}
-

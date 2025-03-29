@@ -1,21 +1,20 @@
 {% extends "base.html" %}
-{% block title %}Login{% endblock %}
+{% block title %}Profile{% endblock %}
 {% block navbar %}
 <div class="collapse navbar-collapse" id="navbarNav">
     <ul class="navbar-nav ms-auto">
         <li class="nav-item">
-            <a class="nav-link" href="{%url 'home'%}">Home</a>
+            <a class="nav-link" href="{%url 'account'%}">Account</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link" href=" {%url 'login'%} ">Login</a>
+            <a class="nav-link" href="home">Sign out</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link" href="{%url 'register'%}">Register</a>
+            <a class="nav-link" href=""></a>
         </li>
     </ul>
 </div>
 {% endblock %}
-
 {% block content %}
-<h1>Hallo from Login</h1>
+<h1>Hallo from My Profile</h1>
 {% endblock %}
