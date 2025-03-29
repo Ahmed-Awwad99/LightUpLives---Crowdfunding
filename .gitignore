@@ -4,6 +4,15 @@ venv/
 # Ignore Python bytecode files
 *.pyc
 # Ignore cache directories
-__pycache__/
-# Ignore secret files
+__pycache__
+# Ignore environoement variables
 .env
+# Ignore database files
+migrations
+
+# Ignore all pycache directories and files
+**/__pycache__/
+**/*.pyc
+
+
+
