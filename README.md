@@ -55,7 +55,7 @@ To set up the project locally:
 
 1. Clone the repository:
    ```sh
-   git clone https://github.com/yourusername/LightUpLives.git
+   git clone git@github.com:Ahmed-Awwad99/LightUpLives.git
    ```
 2. Navigate to the project directory:
    ```sh
