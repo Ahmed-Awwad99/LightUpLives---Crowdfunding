@@ -144,6 +144,8 @@ STATICFILES_DIRS = ['statics']
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
 LOGIN_URL = 'login'
 LOGOUT_URL = 'logout'
 
@@ -152,7 +154,6 @@ EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend' # For developme
 #EMAIL_HOST = 'smtp.gmail.com'   ## Use your email provider's SMTP server
 #EMAIL_PORT = 587   ## Use TLS for security
 #
-
 
 
 
