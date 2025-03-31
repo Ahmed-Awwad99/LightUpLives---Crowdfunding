@@ -1,10 +1,11 @@
 
 from django.urls import path
-from .views import UserLoginView, IndexView, RegisterView, EditView, home, account, profile
+from .views import UserLoginView, IndexView, RegisterView, EditView, home, sign_in, sign_up, account, profile
 from django.contrib.auth import views as auth_views
 
 urlpatterns = [
     path("", IndexView.as_view(), name="home"),
+    path("login/", UserLoginView.as_view(), name="sign_in"),
     path("login/", UserLoginView.as_view(), name="login"),
     path("logout/", auth_views.LogoutView.as_view(template_name='users/logout.html'), name="logout"),
     path("password_change/", auth_views.PasswordChangeView.as_view(template_name="users/password_change_form.html"), name="password_change"),
@@ -19,4 +20,3 @@ urlpatterns = [
     path('account/', account, name='account'),
     path('profile/', profile, name='profile'),
 ]
-

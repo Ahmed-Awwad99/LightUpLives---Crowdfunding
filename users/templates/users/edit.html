@@ -1,4 +1,4 @@
-{% extends "users/base.html" %}
+{% extends "base.html" %}
 
 {% block body %}
     <h2>Edit Profile Form</h2>
@@ -6,7 +6,7 @@
         {% csrf_token %}
         {{ user_form.as_p }}
         {{ profile_form.as_p }}
-        <input type="submit" value="Change password">
+        <input type="submit">
     </form>
 
 {% endblock  %}

@@ -22,7 +22,7 @@ class UserLoginView(View):
                 login(request, user)
                 return render(request, 'users/login_success.html', {"user": user})
             else:
-                return HttpResponse("Invalid username or password")
+                return render(request, 'users/sign_in.html', {"invalid": True, "form": form})
         return render(request, 'users/sign_in.html', {"form": form})
 
 
@@ -44,7 +44,7 @@ class RegisterView(View):
             user.save()
             Profile.objects.create(user=user)
             return render(request, 'users/register_done.html', {"user": user})
-        return render(request, 'users/register.html', {"user_form": user_form})
+        return render(request, 'users/sign_up.html', {"user_form": user_form})
 
 
 class EditView(View):
