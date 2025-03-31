@@ -1,0 +1,12 @@
+{% extends "users/base.html" %}
+
+{% block body %}
+    <h2>Edit Profile Form</h2>
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        {{ user_form.as_p }}
+        {{ profile_form.as_p }}
+        <input type="submit" value="Change password">
+    </form>
+
+{% endblock  %}
