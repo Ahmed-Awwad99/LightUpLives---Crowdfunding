@@ -5,9 +5,15 @@ from django.http import HttpResponse
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from .models import Profile
+from django.views import View
+from django.views.generic.edit import FormView
 
-def user_login(request):
-    if request.method == 'POST':
+class UserLoginView(View):
+    def get(self, request):
+        form = LoginForm()
+        return render(request, 'users/login.html', {"form": form})
+
+    def post(self, request):
         form = LoginForm(request.POST)
         if form.is_valid():
             data = form.cleaned_data
@@ -17,21 +23,20 @@ def user_login(request):
                 return render(request, 'users/login_success.html', {"user": user})
             else:
                 return HttpResponse("Invalid username or password")
-            
-
-    else:
-        form = LoginForm()
-        return render(request, 'users/login.html',{"form": form})
+        return render(request, 'users/login.html', {"form": form})
 
 
+class IndexView(View):
+    def get(self, request):
+        return render(request, 'users/index.html')
 
-@login_required # you have to set up the login url in settings.py
-def index(request):
-    return render(request, 'users/index.html')
 
+class RegisterView(View):
+    def get(self, request):
+        user_form = UserRegistrationForm()
+        return render(request, 'users/register.html', {"user_form": user_form})
 
-def register(request):
-    if request.method == 'POST':
+    def post(self, request):
         user_form = UserRegistrationForm(request.POST)
         if user_form.is_valid():
             user = user_form.save(commit=False)
@@ -39,22 +44,20 @@ def register(request):
             user.save()
             Profile.objects.create(user=user)
             return render(request, 'users/register_done.html', {"user": user})
-    else:
-        user_form = UserRegistrationForm()
-    return render(request, 'users/register.html', {"user_form": user_form})
+        return render(request, 'users/register.html', {"user_form": user_form})
 
 
-@login_required
-def edit(request):
-    if request.method == 'POST':
-        user_from = UserEditForm(request.POST, instance=request.user)
-        profile_form = ProfileEditForm(data =request.POST, files = request.FILES, instance=request.user.profile)
-        if user_from.is_valid() and profile_form.is_valid():
-            user_from.save()
-            profile_form.save()
-    else:
-        user_from = UserEditForm(instance=request.user)
+class EditView(View):
+    def get(self, request):
+        user_form = UserEditForm(instance=request.user)
         profile_form = ProfileEditForm(instance=request.user.profile)
-    return render(request, 'users/edit.html', {'user_form': user_from, 'profile_form': profile_form})
-    
-            
+        return render(request, 'users/edit.html', {'user_form': user_form, 'profile_form': profile_form})
+
+    def post(self, request):
+        user_form = UserEditForm(request.POST, instance=request.user)
+        profile_form = ProfileEditForm(data=request.POST, files=request.FILES, instance=request.user.profile)
+        if user_form.is_valid() and profile_form.is_valid():
+            user_form.save()
+            profile_form.save()
+        return render(request, 'users/edit.html', {'user_form': user_form, 'profile_form': profile_form})
+
