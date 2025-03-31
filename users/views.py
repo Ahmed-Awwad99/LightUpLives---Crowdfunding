@@ -1,9 +1,8 @@
 from django.shortcuts import render
 from django.contrib.auth import authenticate, login
-from .forms import LoginForm 
+from .forms import LoginForm ,UserRegistrationForm
 from django.http import HttpResponse
 from django.contrib.auth.decorators import login_required
-
 
 def user_login(request):
     if request.method == 'POST':
@@ -27,4 +26,18 @@ def user_login(request):
 @login_required # you have to set up the login url in settings.py
 def index(request):
     return render(request, 'users/index.html')
+
+
+def register(request):
+    if request.method == 'POST':
+        user_form = UserRegistrationForm(request.POST)
+        if user_form.is_valid():
+            user = user_form.save(commit=False)
+            user.set_password(user_form.cleaned_data['password'])
+            user.save()
+            Profile.objects.create(user=user)
+            return render(request, 'users/register_done.html', {"user": user})
+    else:
+        user_form = UserRegistrationForm()
+    return render(request, 'users/register.html', {"user_form": user_form})
 
