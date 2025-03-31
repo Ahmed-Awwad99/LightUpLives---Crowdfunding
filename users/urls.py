@@ -1,9 +1,10 @@
+
 from django.urls import path
-from .views import UserLoginView, IndexView, RegisterView, EditView
+from .views import UserLoginView, IndexView, RegisterView, EditView, home, account, profile
 from django.contrib.auth import views as auth_views
 
 urlpatterns = [
-    path("", IndexView.as_view(), name="index"),
+    path("", IndexView.as_view(), name="home"),
     path("login/", UserLoginView.as_view(), name="login"),
     path("logout/", auth_views.LogoutView.as_view(template_name='users/logout.html'), name="logout"),
     path("password_change/", auth_views.PasswordChangeView.as_view(template_name="users/password_change_form.html"), name="password_change"),
@@ -12,6 +13,10 @@ urlpatterns = [
     path("password_reset/done/", auth_views.PasswordResetDoneView.as_view(template_name="users/password_reset_done.html"), name="password_reset_done"),
     path("reset/<uidb64>/<token>/", auth_views.PasswordResetConfirmView.as_view(template_name="users/password_reset_confirm.html"), name="password_reset_confirm"),
     path("reset/done/", auth_views.PasswordResetCompleteView.as_view(template_name="users/password_reset_complete.html"), name="password_reset_complete"),
-    path("register/", RegisterView.as_view(), name="register"),
+    path("register/", RegisterView.as_view(), name="sign_up"),
     path("edit/", EditView.as_view(), name="edit"),
+    path('home/', home, name='home'),
+    path('account/', account, name='account'),
+    path('profile/', profile, name='profile'),
 ]
+

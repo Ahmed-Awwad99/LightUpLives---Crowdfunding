@@ -11,7 +11,7 @@ from django.views.generic.edit import FormView
 class UserLoginView(View):
     def get(self, request):
         form = LoginForm()
-        return render(request, 'users/login.html', {"form": form})
+        return render(request, 'users/sign_in.html', {"form": form})
 
     def post(self, request):
         form = LoginForm(request.POST)
@@ -23,18 +23,18 @@ class UserLoginView(View):
                 return render(request, 'users/login_success.html', {"user": user})
             else:
                 return HttpResponse("Invalid username or password")
-        return render(request, 'users/login.html', {"form": form})
+        return render(request, 'users/sign_in.html', {"form": form})
 
 
 class IndexView(View):
     def get(self, request):
-        return render(request, 'users/index.html')
+        return render(request, 'users/home.html')
 
 
 class RegisterView(View):
     def get(self, request):
         user_form = UserRegistrationForm()
-        return render(request, 'users/register.html', {"user_form": user_form})
+        return render(request, 'users/sign_up.html', {"user_form": user_form})
 
     def post(self, request):
         user_form = UserRegistrationForm(request.POST)
@@ -60,4 +60,21 @@ class EditView(View):
             user_form.save()
             profile_form.save()
         return render(request, 'users/edit.html', {'user_form': user_form, 'profile_form': profile_form})
+
+
+
+def home(request):
+    return render(request, 'users/home.html')
+
+def sign_in(request):
+    return render(request, 'users/sign_in.html')
+
+def sign_up(request):
+    return render(request, 'users/sign_up.html' )
+
+def account(request):
+    return render(request, 'users/account.html')
+
+def profile(request):
+    return render(request, 'users/profile.html')
 
