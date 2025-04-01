@@ -18,13 +18,12 @@ class UserLoginView(View):
         form = LoginForm(request.POST)
         if form.is_valid():
             data = form.cleaned_data
-            user = authenticate(request, username=data['username'], password=data['password'])
+            user = authenticate(request, email=data['email'], password=data['password'])  # Authenticate using email
             if user is not None:
                 login(request, user)
                 return render(request, 'users/login_success.html', {"user": user})
             else:
-                # Add error message for invalid credentials
-                return render(request, 'users/sign_in.html', {"form": form, "error": "Invalid username or password"})
+                return render(request, 'users/sign_in.html', {"form": form, "error": "Invalid email or password"})
         return render(request, 'users/sign_in.html', {"form": form})
 
 

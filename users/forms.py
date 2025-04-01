@@ -18,7 +18,7 @@ class ProfileEditForm(forms.ModelForm):
 
 
 class LoginForm(forms.Form):
-    username = forms.CharField(max_length=150, label='Username')
+    email = forms.EmailField(max_length=254, label='Email')  # Use email instead of username
     password = forms.CharField(widget=forms.PasswordInput, label='Password')
 
 
@@ -28,7 +28,7 @@ class UserRegistrationForm(forms.ModelForm):
 
     class Meta:
         model = Users  # Updated to use the custom Users model
-        fields = {'username', 'email', 'first_name', 'last_name', 'phone_number','profile_picture'}
+        fields = {'email', 'first_name', 'last_name', 'phone_number', 'profile_picture'}  # Removed 'username'
 
     def clean_password2(self):
         password = self.cleaned_data.get('password')
