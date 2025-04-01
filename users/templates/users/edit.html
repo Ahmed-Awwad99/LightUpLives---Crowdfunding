@@ -4,6 +4,10 @@
     <h2>Edit Profile Form</h2>
     <form method="post" enctype="multipart/form-data">
         {% csrf_token %}
+ 
+            <label for="email">Email:</label>
+            <input type="email" id="email" value="{{ user.email }}" readonly disabled>
+   
         {{ user_form.as_p }}
         {{ profile_form.as_p }}
 
