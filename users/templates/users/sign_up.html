@@ -2,7 +2,7 @@
 {% block title %}Register{% endblock %}
 
 {% block content %}
-<form method="POST">
+<form method="POST" enctype="multipart/form-data">  <!-- Add enctype for file uploads -->
     {% csrf_token %}
     <h1>Register</h1>
     {{ user_form.as_p }}

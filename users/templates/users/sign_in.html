@@ -6,13 +6,10 @@
     {{ form.as_p }}
     <input type="submit" value="Login">
 </form>
+{% if error %}
+    <p style="color: red;">{{ error }}</p>
+{% endif %}
 <p><a href="{% url "password_reset" %}">Forgot password? Click here to reset</a></p>
 <h1>Go to your Account</h1>
-<a href=" {%url 'account'%} ">YOUR ACCOUNT</a>
-
-{% if invalid %}
-    <p style="color: red;">Invalid username or password.</p>
-{% endif %}
-
-
+<a href="{% url 'account' %}">YOUR ACCOUNT</a>
 {% endblock %}

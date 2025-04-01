@@ -7,6 +7,7 @@ from django.contrib.auth.models import User
 from .models import Profile
 from django.views import View
 from django.views.generic.edit import FormView
+from django.contrib.auth import get_user_model
 
 class UserLoginView(View):
     def get(self, request):
@@ -22,7 +23,8 @@ class UserLoginView(View):
                 login(request, user)
                 return render(request, 'users/login_success.html', {"user": user})
             else:
-                return render(request, 'users/sign_in.html', {"invalid": True, "form": form})
+                # Add error message for invalid credentials
+                return render(request, 'users/sign_in.html', {"form": form, "error": "Invalid username or password"})
         return render(request, 'users/sign_in.html', {"form": form})
 
 
@@ -37,7 +39,7 @@ class RegisterView(View):
         return render(request, 'users/sign_up.html', {"user_form": user_form})
 
     def post(self, request):
-        user_form = UserRegistrationForm(request.POST)
+        user_form = UserRegistrationForm(request.POST, request.FILES)  # Include request.FILES to handle file uploads
         if user_form.is_valid():
             user = user_form.save(commit=False)
             user.set_password(user_form.cleaned_data['password'])
@@ -54,8 +56,8 @@ class EditView(View):
         return render(request, 'users/edit.html', {'user_form': user_form, 'profile_form': profile_form})
 
     def post(self, request):
-        user_form = UserEditForm(request.POST, instance=request.user)
-        profile_form = ProfileEditForm(data=request.POST, files=request.FILES, instance=request.user.profile)
+        user_form = UserEditForm(request.POST, request.FILES, instance=request.user)
+        profile_form = ProfileEditForm(data=request.POST, instance=request.user.profile)
         if user_form.is_valid() and profile_form.is_valid():
             user_form.save()
             profile_form.save()

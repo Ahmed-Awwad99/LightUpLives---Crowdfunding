@@ -153,7 +153,8 @@ EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend' # For developme
 
 #EMAIL_HOST = 'smtp.gmail.com'   ## Use your email provider's SMTP server
 #EMAIL_PORT = 587   ## Use TLS for security
-#
+
+AUTH_USER_MODEL = 'users.Users'  # Use the custom Users model for authentication
 
 
 
