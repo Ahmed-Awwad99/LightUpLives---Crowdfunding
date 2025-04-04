@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from .forms import ProjectForm, DonationForm
-from .models import Project, Donation
+from .models import Project, Donation, ProjectFile
 
 @login_required
 def create_project(request):
@@ -11,6 +11,9 @@ def create_project(request):
             project = form.save(commit=False)
             project.created_by = request.user
             project.save()
+            # Handle multiple file uploads
+            for file in request.FILES.getlist('files'):
+                ProjectFile.objects.create(project=project, file=file)
             return redirect('home')
     else:
         form = ProjectForm()
