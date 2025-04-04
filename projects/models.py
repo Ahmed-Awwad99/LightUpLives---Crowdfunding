@@ -23,6 +23,10 @@ class Project(models.Model):
     def __str__(self):
         return self.title
 
+class ProjectFile(models.Model):
+    project = models.ForeignKey(Project, on_delete=models.CASCADE, related_name='files')
+    file = models.FileField(upload_to='project_files/')
+
 class Donation(models.Model):
     project = models.ForeignKey(Project, on_delete=models.CASCADE, related_name="donations")
     donor = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="donations")
