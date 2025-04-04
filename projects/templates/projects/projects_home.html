@@ -1,0 +1,9 @@
+{% extends "base.html" %}
+{% block title %}Projects{% endblock %}
+{% block content %}
+<h1>Projects</h1>
+<div class="d-flex flex-column flex-md-row align-items-start align-items-md-center">
+    <a href="{% url 'create_project' %}" class="btn btn-success mb-2 mb-md-0 me-md-2">Create Project</a>
+    <a href="{% url 'manage_projects' %}" class="btn btn-outline-success">Manage Projects</a>
+</div>
+{% endblock %}

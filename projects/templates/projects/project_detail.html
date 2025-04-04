@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% block title %}{{ project.title }}{% endblock %}
+{% block content %}
+<h1>{{ project.title }}</h1>
+<p>{{ project.description }}</p>
+<p>Category: {{ project.category.name }}</p>
+<p>Target: {{ project.target }} EGP</p>
+<p>Total Donated: {{ total_donated }} EGP</p>
+<p>Remaining: {{ project.target|floatformat:2|add:"-"|add:total_donated }} EGP</p>
+
+<h2>Donate to this project</h2>
+<form method="POST">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit" class="btn btn-success">Donate</button>
+</form>
+
+<h2>Donations</h2>
+<ul>
+    {% for donation in donations %}
+        <li>{{ donation.donor.email }} donated {{ donation.amount }} EGP on {{ donation.donated_at }}</li>
+    {% endfor %}
+</ul>
+{% endblock %}
