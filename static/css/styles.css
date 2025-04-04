@@ -1,0 +1,24 @@
+.navbar-dark.bg-dark {
+    background-color: #004d40 !important; /* Dark green */
+}
+
+.navbar-brand.text-primary {
+    color: #f8fcfc !important; /* Light green */
+}
+
+.footer-bg {
+    background-color: #004d40 !important; /* Dark green */
+}
+
+.text-success {
+    color: #2e7d32 !important; /* Green for headings */
+}
+
+.btn-success {
+    background-color: #2e7d32 !important; /* Green for buttons */
+    border-color: #2e7d32 !important;
+}
+
+.list-group-item {
+    border-color: #004d40 !important; /* Green border for list items */
+}
