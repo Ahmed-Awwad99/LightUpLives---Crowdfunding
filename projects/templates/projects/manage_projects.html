@@ -3,7 +3,16 @@
 {% block content %}
 <h1>Your Projects</h1>
 <ul>
-    {% for project in projects %}
+    {% for project in user_projects %}
+        <li>
+            <a href="{% url 'project_detail' project.id %}">{{ project.title }}</a> - {{ project.category.name }}
+        </li>
+    {% endfor %}
+</ul>
+
+<h2 class="mt-5">All Projects</h2>
+<ul>
+    {% for project in all_projects %}
         <li>
             <a href="{% url 'project_detail' project.id %}">{{ project.title }}</a> - {{ project.category.name }}
         </li>
