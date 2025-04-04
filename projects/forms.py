@@ -1,5 +1,6 @@
 from django import forms
 from .models import Project
+from .models import Donation
 
 class ProjectForm(forms.ModelForm):
     class Meta:
@@ -10,4 +11,10 @@ class ProjectForm(forms.ModelForm):
             'end_date': forms.DateInput(attrs={'type': 'date'}),
         }
 
-
+class DonationForm(forms.ModelForm):
+    class Meta:
+        model = Donation
+        fields = ['amount']
+        widgets = {
+            'amount': forms.NumberInput(attrs={'class': 'form-control', 'min': '1'}),
+        }

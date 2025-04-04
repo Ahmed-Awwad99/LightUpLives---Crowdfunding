@@ -21,3 +21,11 @@ def manage_projects(request):
     projects = Project.objects.filter(created_by=request.user)
     return render(request, 'projects/manage_projects.html', {'projects': projects})
 
+def projects_home(request):
+    all_projects = Project.objects.all()
+    user_projects = Project.objects.filter(created_by=request.user) if request.user.is_authenticated else None
+    return render(request, 'projects/projects_home.html', {
+        'all_projects': all_projects,
+        'user_projects': user_projects,
+    })
+
