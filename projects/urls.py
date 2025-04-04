@@ -5,4 +5,5 @@ urlpatterns = [
     path('', projects_home, name='projects_home'),
     path('create/', create_project, name='create_project'),
     path('manage/', manage_projects, name='manage_projects'),
+    path('<int:project_id>/', project_detail, name='project_detail'),
 ]

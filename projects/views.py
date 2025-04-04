@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
-from .forms import ProjectForm
-from .models import Project
+from .forms import ProjectForm, DonationForm
+from .models import Project, Donation
 
 @login_required
 def create_project(request):
@@ -29,3 +29,25 @@ def projects_home(request):
         'user_projects': user_projects,
     })
 
+def project_detail(request, project_id):
+    project = Project.objects.get(id=project_id)
+    donations = project.donations.all()
+    total_donated = sum(donation.amount for donation in donations)
+
+    if request.method == "POST":
+        form = DonationForm(request.POST)
+        if form.is_valid():
+            donation = form.save(commit=False)
+            donation.project = project
+            donation.donor = request.user
+            donation.save()
+            return redirect('project_detail', project_id=project.id)
+    else:
+        form = DonationForm()
+
+    return render(request, 'projects/project_detail.html', {
+        'project': project,
+        'form': form,
+        'donations': donations,
+        'total_donated': total_donated,
+    })
