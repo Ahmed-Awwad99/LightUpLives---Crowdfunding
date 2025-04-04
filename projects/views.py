@@ -18,16 +18,15 @@ def create_project(request):
 
 @login_required
 def manage_projects(request):
-    projects = Project.objects.filter(created_by=request.user)
-    return render(request, 'projects/manage_projects.html', {'projects': projects})
+    user_projects = Project.objects.filter(created_by=request.user)
+    all_projects = Project.objects.all()
+    return render(request, 'projects/manage_projects.html', {
+        'user_projects': user_projects,
+        'all_projects': all_projects,
+    })
 
 def projects_home(request):
-    all_projects = Project.objects.all()
-    user_projects = Project.objects.filter(created_by=request.user) if request.user.is_authenticated else None
-    return render(request, 'projects/projects_home.html', {
-        'all_projects': all_projects,
-        'user_projects': user_projects,
-    })
+    return render(request, 'projects/projects_home.html')
 
 def project_detail(request, project_id):
     project = Project.objects.get(id=project_id)
