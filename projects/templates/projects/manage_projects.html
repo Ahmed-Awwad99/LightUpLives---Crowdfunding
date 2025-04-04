@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% block title %}Manage Projects{% endblock %}
+{% block content %}
+<h1>Your Projects</h1>
+<ul>
+    {% for project in projects %}
+        <li>
+            <a href="{% url 'project_detail' project.id %}">{{ project.title }}</a> - {{ project.category.name }}
+        </li>
+    {% endfor %}
+</ul>
+{% endblock %}
