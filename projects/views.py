@@ -1,5 +1,7 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
+from django.contrib import messages
+from decimal import Decimal  # Import Decimal for precise arithmetic
 from .forms import ProjectForm, DonationForm, CommentForm, ReportForm
 from .models import Project, Donation, Report
 
@@ -18,8 +20,9 @@ def create_project(request):
 
 @login_required
 def manage_projects(request):
+    # Include canceled projects only for the creator
     user_projects = Project.objects.filter(created_by=request.user)
-    all_projects = Project.objects.all()
+    all_projects = Project.objects.filter(cancelled=False)  # Exclude canceled projects for non-creators
     return render(request, 'projects/manage_projects.html', {
         'user_projects': user_projects,
         'all_projects': all_projects,
@@ -70,7 +73,7 @@ def project_detail(request, project_id):
 @login_required
 def report_project(request, project_id):
     project = Project.objects.get(id=project_id)
-    previous_reports = project.reports.all()  # Fetch previous reports for the project
+    previous_reports = project.reports.all()  
     if request.method == "POST":
         form = ReportForm(request.POST)
         if form.is_valid():
@@ -84,6 +87,18 @@ def report_project(request, project_id):
     return render(request, 'projects/report_project.html', {
         'form': form,
         'project': project,
-        'previous_reports': previous_reports  # Pass previous reports to the template
+        'previous_reports': previous_reports  
     })
+
+@login_required
+def cancel_project(request, project_id):
+    project = Project.objects.get(id=project_id, created_by=request.user)
+    total_donated = sum(donation.amount for donation in project.donations.all())
+    if total_donated < (Decimal('0.25') * project.target):  # Use Decimal for multiplication
+        project.cancelled = True
+        project.save()
+        messages.success(request, "Project has been successfully canceled.")
+    else:
+        messages.error(request, "You cannot cancel this project as donations exceed 25% of the target.")
+    return redirect('manage_projects')
 
