@@ -24,7 +24,7 @@
         <button type="submit" class="btn btn-danger">Submit Report</button>
     </div>
 </form>
-{% if user == project.creator %}
+{% if user == project.created_by %}
 <h2>Previous Reports</h2>
 <ul>
     {% for report in previous_reports %}

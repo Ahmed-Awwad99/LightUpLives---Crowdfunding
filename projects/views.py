@@ -94,6 +94,7 @@ def report_project(request, project_id):
     return render(request, 'projects/report_project.html', {
         'form': form,
         'project': project,
+        'user': request.user,
         'previous_reports': previous_reports,  
     })
 
