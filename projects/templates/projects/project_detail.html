@@ -12,7 +12,7 @@
 <form method="POST">
     {% csrf_token %}
     {{ form.as_p }}
-    <button type="submit" class="btn btn-success">Donate</button>
+    <button type="submit" name="donate" class="btn btn-success" >Donate</button>
 </form>
 
 <h2>Donations</h2>
@@ -21,4 +21,25 @@
         <li>{{ donation.donor.email }} donated {{ donation.amount }} EGP on {{ donation.donated_at }}</li>
     {% endfor %}
 </ul>
+
+<h2>Comments</h2>
+<ul>
+    {% for comment in comments %}
+        <li>
+            <strong>{{ comment.user.email }}</strong> ({{ comment.created_at|date:"d M Y H:i" }}): 
+            {{ comment.content }}
+        </li>
+    {% endfor %}
+</ul>
+
+{% if user.is_authenticated %}
+    <h3>Add a Comment</h3>
+    <form method="POST">
+        {% csrf_token %}
+        {{ comment_form.as_p }}
+        <button type="submit" name="comment" class="btn btn-success">Post Comment</button>
+    </form>
+{% else %}
+    <p><a href="{% url 'sign_in' %}">Sign in</a> to add a comment.</p>
+{% endif %}
 {% endblock %}

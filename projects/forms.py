@@ -1,6 +1,7 @@
 from django import forms
 from .models import Project
 from .models import Donation
+from .models import Comment
 
 class ProjectForm(forms.ModelForm):
     class Meta:
@@ -23,4 +24,12 @@ class DonationForm(forms.ModelForm):
         fields = ['amount']
         widgets = {
             'amount': forms.NumberInput(attrs={'class': 'form-control', 'min': '1', 'placeholder': 'Enter donation amount'}),
+        }
+
+class CommentForm(forms.ModelForm):
+    class Meta:
+        model = Comment
+        fields = ['content']
+        widgets = {
+            'content': forms.Textarea(attrs={'class': 'form-control', 'rows': 3, 'placeholder': 'Write your comment here...'}),
         }
