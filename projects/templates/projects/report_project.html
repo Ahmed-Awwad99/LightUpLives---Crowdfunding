@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% block title %}Report Project{% endblock %}
+{% block content %}
+<h1>Report Project: {{ project.title }}</h1>
+<form method="POST" >
+    {% csrf_token %}
+    {{ReportForm.as_p}}
+
+    <div class="form-group">
+        <label for="reason">Reason for Reporting:</label>
+        <select name="reason" id="reason" class="form-control" required>
+            <option value="">Select a reason</option>
+            <option value="Inappropriate content">Inappropriate content</option>
+            <option value="Fraudulent activity">Fraudulent activity</option>
+            <option value="Spam">Spam</option>
+            <option value="Other">Other</option>
+        </select>
+    </div>
+    <div class="form-group">
+        <label for="description">Description:</label>
+        <textarea name="description" id="description" class="form-control" rows="4" required></textarea>
+    </div>
+    <div>
+        <button type="submit" class="btn btn-danger">Submit Report</button>
+    </div>
+</form>
+
+<h2>Previous Reports</h2>
+<ul>
+    {% for report in previous_reports %}
+        <li>
+            <strong>{{ report.user.email }}</strong> reported on {{ report.created_at|date:"d M Y H:i" }}:
+            <p>{{ report.reason }}</p>
+        </li>
+    {% empty %}
+        <p>No previous reports for this project.</p>
+    {% endfor %}
+</ul>
+{% endblock %}
+
+

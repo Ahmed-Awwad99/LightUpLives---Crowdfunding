@@ -8,6 +8,10 @@
 <p>Total Donated: {{ total_donated }} EGP</p>
 <p>Remaining: {{ project.target|floatformat:2|add:"-"|add:total_donated }} EGP</p>
 
+{% if user.is_authenticated %}
+    <a href="{% url 'report_project' project.id %}" class="btn btn-danger">Report Project</a>
+{% endif %}
+
 <h2>Donate to this project</h2>
 <form method="POST">
     {% csrf_token %}

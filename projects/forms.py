@@ -2,6 +2,7 @@ from django import forms
 from .models import Project
 from .models import Donation
 from .models import Comment
+from .models import Report
 
 class ProjectForm(forms.ModelForm):
     class Meta:
@@ -32,4 +33,12 @@ class CommentForm(forms.ModelForm):
         fields = ['content']
         widgets = {
             'content': forms.Textarea(attrs={'class': 'form-control', 'rows': 3, 'placeholder': 'Write your comment here...'}),
+        }
+
+class ReportForm(forms.ModelForm):
+    class Meta:
+        model = Report
+        fields = ['reason']
+        widgets = {
+            'reason': forms.Textarea(attrs={'class': 'form-control', 'rows': 3, 'placeholder': 'Explain why you are reporting this project...'}),
         }

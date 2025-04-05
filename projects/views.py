@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
-from .forms import ProjectForm, DonationForm , CommentForm
-from .models import Project, Donation
+from .forms import ProjectForm, DonationForm, CommentForm, ReportForm
+from .models import Project, Donation, Report
 
 @login_required
 def create_project(request):
@@ -27,6 +27,7 @@ def manage_projects(request):
 
 def projects_home(request):
     return render(request, 'projects/projects_home.html')
+
 def project_detail(request, project_id): 
     project = Project.objects.get(id=project_id)
     donations = project.donations.all()
@@ -64,5 +65,25 @@ def project_detail(request, project_id):
         'donations': donations,
         'comments': comments,
         'total_donated': total_donated,
+    })
+
+@login_required
+def report_project(request, project_id):
+    project = Project.objects.get(id=project_id)
+    previous_reports = project.reports.all()  # Fetch previous reports for the project
+    if request.method == "POST":
+        form = ReportForm(request.POST)
+        if form.is_valid():
+            report = form.save(commit=False)
+            report.project = project
+            report.user = request.user
+            report.save()
+            return redirect('project_detail', project_id=project.id)
+    else:
+        form = ReportForm()
+    return render(request, 'projects/report_project.html', {
+        'form': form,
+        'project': project,
+        'previous_reports': previous_reports  # Pass previous reports to the template
     })
 
