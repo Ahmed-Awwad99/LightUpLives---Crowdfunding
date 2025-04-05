@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from decimal import Decimal  # Import Decimal for precise arithmetic
+from django.http import HttpResponseForbidden  # Import for handling forbidden access
 from .forms import ProjectForm, DonationForm, CommentForm, ReportForm
 from .models import Project, Donation, Report
 
@@ -22,7 +23,7 @@ def create_project(request):
 def manage_projects(request):
     # Include canceled projects only for the creator
     user_projects = Project.objects.filter(created_by=request.user)
-    all_projects = Project.objects.filter(cancelled=False)  # Exclude canceled projects for non-creators
+    all_projects = Project.objects.filter(cancelled=False)  
     return render(request, 'projects/manage_projects.html', {
         'user_projects': user_projects,
         'all_projects': all_projects,
@@ -73,7 +74,11 @@ def project_detail(request, project_id):
 @login_required
 def report_project(request, project_id):
     project = Project.objects.get(id=project_id)
-    previous_reports = project.reports.all()  
+    previous_reports = None
+
+    if request.user == project.created_by:
+        previous_reports = project.reports.all()
+
     if request.method == "POST":
         form = ReportForm(request.POST)
         if form.is_valid():
@@ -81,13 +86,15 @@ def report_project(request, project_id):
             report.project = project
             report.user = request.user
             report.save()
+            messages.success(request, "Your report has been submitted.")
             return redirect('project_detail', project_id=project.id)
     else:
         form = ReportForm()
+
     return render(request, 'projects/report_project.html', {
         'form': form,
         'project': project,
-        'previous_reports': previous_reports  
+        'previous_reports': previous_reports,  
     })
 
 @login_required
