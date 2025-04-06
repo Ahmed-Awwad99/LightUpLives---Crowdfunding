@@ -2,13 +2,26 @@
 {% block title %}Create Project{% endblock %}
 {% block content %}
 <h1 class="text-success">Create a New Project</h1>
+
+{% if form.errors %}
+<div class="alert alert-danger">
+    <ul>
+        {% for field, errors in form.errors.items %}
+            {% for error in errors %}
+                <li>{{ error }}</li>
+            {% endfor %}
+        {% endfor %}
+    </ul>
+</div>
+{% endif %}
+
 <form method="POST" enctype="multipart/form-data" class="mt-4">
     {% csrf_token %}
-    
+
     <div class="mb-3">
         {{ form.title.label_tag }} {{ form.title }}
     </div>
-    
+
     <div class="mb-3">
         {{ form.description.label_tag }} {{ form.description }}
     </div>
@@ -34,11 +47,8 @@
     </div>
 
     <div class="mb-3">
-        {{ form.images.label_tag }} {{ form.images }}
-    </div>
-
-    <div class="mb-3">
-        {{ form.files.label_tag }} {{ form.files }}
+        <label for="images">Upload Images</label>
+        <input type="file" name="images" id="images" multiple class="form-control">
     </div>
 
     <button type="submit" class="btn btn-success">Create Project</button>

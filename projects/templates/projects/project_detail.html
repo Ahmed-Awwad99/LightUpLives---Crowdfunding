@@ -1,12 +1,43 @@
 {% extends "base.html" %}
 {% block title %}{{ project.title }}{% endblock %}
 {% block content %}
-<h1>{{ project.title }}</h1>
-<p>{{ project.description }}</p>
-<p>Category: {{ project.category.name }}</p>
-<p>Target: {{ project.target }} EGP</p>
-<p>Total Donated: {{ total_donated }} EGP</p>
-<p>Remaining: {{ project.target|floatformat:2|add:"-"|add:total_donated }} EGP</p>
+<div class="container mt-5">
+    <div class="row align-items-center">
+        <!-- Left Section: Text Content -->
+        <div class="col-md-6">
+            <h1 class="fw-bold">{{ project.title }}</h1>
+            <h5 class="text-muted">Image description and details</h5>
+            <p>{{ project.description }}</p>
+            <p><strong>Category:</strong> {{ project.category.name }}</p>
+            <p><strong>Target:</strong> {{ project.target }} EGP</p>
+            <p><strong>Total Donated:</strong> {{ total_donated }} EGP</p>
+            <p><strong>Remaining:</strong> {{ remaining }} EGP</p>
+        </div>
+
+        <!-- Right Section: Image -->
+        <div class="col-md-6">
+            <div class="card shadow-sm">
+                <div id="project-slider" class="carousel slide" data-bs-ride="carousel">
+                    <div class="carousel-inner">
+                        {% for image in project.images.all %}
+                        <div class="carousel-item {% if forloop.first %}active{% endif %}">
+                            <img src="{{ image.image.url }}" class="d-block w-100 rounded" alt="Project Image">
+                        </div>
+                        {% endfor %}
+                    </div>
+                    <button class="carousel-control-prev" type="button" data-bs-target="#project-slider" data-bs-slide="prev">
+                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                        <span class="visually-hidden">Previous</span>
+                    </button>
+                    <button class="carousel-control-next" type="button" data-bs-target="#project-slider" data-bs-slide="next">
+                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                        <span class="visually-hidden">Next</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 
 {% if project.cancelled %}
     <p class="text-danger">This project has been canceled and is no longer accepting donations.</p>
@@ -14,7 +45,7 @@
     {% if user.is_authenticated %}
         <a href="{% url 'report_project' project.id %}" class="btn btn-danger">Report Project</a>
     {% endif %}
-
+<div class="container mt-5">
     <h2>Donate to this project</h2>
     <form method="POST">
         {% csrf_token %}
@@ -29,7 +60,7 @@
         {% endfor %}
     </ul>
 
-    <h2>Comments</h2>
+    <h2 class="mt-4">Donations</h2>
     <ul>
         {% for comment in comments %}
             <li>
@@ -40,7 +71,7 @@
     </ul>
 
     {% if user.is_authenticated %}
-        <h3>Add a Comment</h3>
+        <h3 class="mt-4">Add a Comment</h3>
         <form method="POST">
             {% csrf_token %}
             {{ comment_form.as_p }}
@@ -50,6 +81,7 @@
         <p><a href="{% url 'sign_in' %}">Sign in</a> to add a comment.</p>
     {% endif %}
 {% endif %}
+</div>
 
 <h2>Similar Projects</h2>
 <div class="row">

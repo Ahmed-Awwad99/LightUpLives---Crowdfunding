@@ -15,6 +15,9 @@ def create_project(request):
             project = form.save(commit=False)
             project.created_by = request.user
             project.save()
+
+            for image in request.FILES.getlist('images'):
+                ProjectImage.objects.create(project=project, image=image)
             return redirect('home')
     else:
         form = ProjectForm()
@@ -38,11 +41,7 @@ def project_detail(request, project_id):
     donations = project.donations.all()
     total_donated = sum(donation.amount for donation in donations)
     comments = project.comments.all()
-
-    
-    similar_projects = Project.objects.filter(
-        Q(tags__icontains=project.tags) & ~Q(id=project.id)  
-    ).distinct()[:4]  
+    remaining = project.target - total_donated  # Calculate remaining amount
 
     if request.method == "POST":
         if 'donate' in request.POST:
@@ -75,8 +74,10 @@ def project_detail(request, project_id):
         'donations': donations,
         'comments': comments,
         'total_donated': total_donated,
-        'similar_projects': similar_projects,  
+        'remaining': remaining,  # Pass remaining amount to the template
+
     })
+
 
 @login_required
 def report_project(request, project_id):
@@ -94,15 +95,15 @@ def report_project(request, project_id):
             report.user = request.user
             report.save()
             messages.success(request, "Your report has been submitted.")
+
             return redirect('project_detail', project_id=project.id)
     else:
         form = ReportForm()
-
     return render(request, 'projects/report_project.html', {
         'form': form,
         'project': project,
         'user': request.user,
-        'previous_reports': previous_reports,  
+        'previous_reports': previous_reports  # Pass previous reports to the template
     })
 
 @login_required
