@@ -8,42 +8,64 @@
 <p>Total Donated: {{ total_donated }} EGP</p>
 <p>Remaining: {{ project.target|floatformat:2|add:"-"|add:total_donated }} EGP</p>
 
-{% if user.is_authenticated %}
-    <a href="{% url 'report_project' project.id %}" class="btn btn-danger">Report Project</a>
-{% endif %}
+{% if project.cancelled %}
+    <p class="text-danger">This project has been canceled and is no longer accepting donations.</p>
+{% else %}
+    {% if user.is_authenticated %}
+        <a href="{% url 'report_project' project.id %}" class="btn btn-danger">Report Project</a>
+    {% endif %}
 
-<h2>Donate to this project</h2>
-<form method="POST">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit" name="donate" class="btn btn-success" >Donate</button>
-</form>
-
-<h2>Donations</h2>
-<ul>
-    {% for donation in donations %}
-        <li>{{ donation.donor.email }} donated {{ donation.amount }} EGP on {{ donation.donated_at }}</li>
-    {% endfor %}
-</ul>
-
-<h2>Comments</h2>
-<ul>
-    {% for comment in comments %}
-        <li>
-            <strong>{{ comment.user.email }}</strong> ({{ comment.created_at|date:"d M Y H:i" }}): 
-            {{ comment.content }}
-        </li>
-    {% endfor %}
-</ul>
-
-{% if user.is_authenticated %}
-    <h3>Add a Comment</h3>
+    <h2>Donate to this project</h2>
     <form method="POST">
         {% csrf_token %}
-        {{ comment_form.as_p }}
-        <button type="submit" name="comment" class="btn btn-success">Post Comment</button>
+        {{ form.as_p }}
+        <button type="submit" name="donate" class="btn btn-success" >Donate</button>
     </form>
-{% else %}
-    <p><a href="{% url 'sign_in' %}">Sign in</a> to add a comment.</p>
+
+    <h2>Donations</h2>
+    <ul>
+        {% for donation in donations %}
+            <li>{{ donation.donor.email }} donated {{ donation.amount }} EGP on {{ donation.donated_at }}</li>
+        {% endfor %}
+    </ul>
+
+    <h2>Comments</h2>
+    <ul>
+        {% for comment in comments %}
+            <li>
+                <strong>{{ comment.user.email }}</strong> ({{ comment.created_at|date:"d M Y H:i" }}): 
+                {{ comment.content }}
+            </li>
+        {% endfor %}
+    </ul>
+
+    {% if user.is_authenticated %}
+        <h3>Add a Comment</h3>
+        <form method="POST">
+            {% csrf_token %}
+            {{ comment_form.as_p }}
+            <button type="submit" name="comment" class="btn btn-success">Post Comment</button>
+        </form>
+    {% else %}
+        <p><a href="{% url 'sign_in' %}">Sign in</a> to add a comment.</p>
+    {% endif %}
 {% endif %}
+
+<h2>Similar Projects</h2>
+<div class="row">
+    {% for similar_project in similar_projects %}
+        <div class="col-md-3">
+            <div class="card">
+                <img src="{{ similar_project.images.url }}" class="card-img-top" alt="{{ similar_project.title }}">
+                <div class="card-body">
+                    <h5 class="card-title">{{ similar_project.title }}</h5>
+                    <p class="card-text">{{ similar_project.description|truncatechars:100 }}</p>
+                    <a href="{% url 'project_detail' similar_project.id %}" class="btn btn-primary">View Project</a>
+                </div>
+            </div>
+        </div>
+    {% empty %}
+        <p>No similar projects found.</p>
+    {% endfor %}
+</div>
 {% endblock %}

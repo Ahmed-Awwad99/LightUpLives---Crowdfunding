@@ -19,6 +19,7 @@ class Project(models.Model):
     created_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="projects")
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+    cancelled = models.BooleanField(default=False)  
 
     def __str__(self):
         return self.title
@@ -49,5 +50,5 @@ class Report(models.Model):
 
     def __str__(self):
         return f"Report by {self.user.email} on {self.project.title}"
-    
+
 

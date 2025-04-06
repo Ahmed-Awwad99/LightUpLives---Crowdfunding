@@ -1,7 +1,11 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
-from .forms import ProjectForm, DonationForm, CommentForm, ReportForm
-from .models import Project, Donation, Report
+from django.contrib import messages
+from decimal import Decimal  
+from django.http import HttpResponseForbidden  
+from django.db.models import Q  
+from .forms import *
+from .models import *
 
 @login_required
 def create_project(request):
@@ -18,8 +22,9 @@ def create_project(request):
 
 @login_required
 def manage_projects(request):
+
     user_projects = Project.objects.filter(created_by=request.user)
-    all_projects = Project.objects.all()
+    all_projects = Project.objects.filter(cancelled=False)  
     return render(request, 'projects/manage_projects.html', {
         'user_projects': user_projects,
         'all_projects': all_projects,
@@ -33,6 +38,11 @@ def project_detail(request, project_id):
     donations = project.donations.all()
     total_donated = sum(donation.amount for donation in donations)
     comments = project.comments.all()
+
+    
+    similar_projects = Project.objects.filter(
+        Q(tags__icontains=project.tags) & ~Q(id=project.id)  
+    ).distinct()[:4]  
 
     if request.method == "POST":
         if 'donate' in request.POST:
@@ -65,12 +75,17 @@ def project_detail(request, project_id):
         'donations': donations,
         'comments': comments,
         'total_donated': total_donated,
+        'similar_projects': similar_projects,  
     })
 
 @login_required
 def report_project(request, project_id):
     project = Project.objects.get(id=project_id)
-    previous_reports = project.reports.all()  # Fetch previous reports for the project
+    previous_reports = None
+
+    if request.user == project.created_by:
+        previous_reports = project.reports.all()
+
     if request.method == "POST":
         form = ReportForm(request.POST)
         if form.is_valid():
@@ -78,12 +93,27 @@ def report_project(request, project_id):
             report.project = project
             report.user = request.user
             report.save()
+            messages.success(request, "Your report has been submitted.")
             return redirect('project_detail', project_id=project.id)
     else:
         form = ReportForm()
+
     return render(request, 'projects/report_project.html', {
         'form': form,
         'project': project,
-        'previous_reports': previous_reports  # Pass previous reports to the template
+        'user': request.user,
+        'previous_reports': previous_reports,  
     })
+
+@login_required
+def cancel_project(request, project_id):
+    project = Project.objects.get(id=project_id, created_by=request.user)
+    total_donated = sum(donation.amount for donation in project.donations.all())
+    if total_donated < (Decimal('0.25') * project.target):  
+        project.cancelled = True
+        project.save()
+        messages.success(request, "Project has been successfully canceled.")
+    else:
+        messages.error(request, "You cannot cancel this project as donations exceed 25% of the target.")
+    return redirect('manage_projects')
 

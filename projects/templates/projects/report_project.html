@@ -24,7 +24,7 @@
         <button type="submit" class="btn btn-danger">Submit Report</button>
     </div>
 </form>
-
+{% if user == project.created_by %}
 <h2>Previous Reports</h2>
 <ul>
     {% for report in previous_reports %}
@@ -36,6 +36,11 @@
         <p>No previous reports for this project.</p>
     {% endfor %}
 </ul>
+{% else %}
+<div class="alert alert-warning" role="alert">
+    <p>You do not have permission to view previous reports for this project.</p>
+</div>
+{% endif %}
 {% endblock %}
 
 
