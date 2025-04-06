@@ -42,6 +42,9 @@ def project_detail(request, project_id):
     total_donated = sum(donation.amount for donation in donations)
     comments = project.comments.all()
     remaining = project.target - total_donated  # Calculate remaining amount
+    similar_projects = Project.objects.filter(
+        Q(tags__icontains=project.tags) & ~Q(id=project.id)  
+    ).distinct()[:4]  
 
     if request.method == "POST":
         if 'donate' in request.POST:
@@ -75,6 +78,7 @@ def project_detail(request, project_id):
         'comments': comments,
         'total_donated': total_donated,
         'remaining': remaining,  # Pass remaining amount to the template
+        'similar_projects': similar_projects,  
 
     })
 
