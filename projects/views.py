@@ -1,10 +1,11 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
-from decimal import Decimal  # Import Decimal for precise arithmetic
-from django.http import HttpResponseForbidden  # Import for handling forbidden access
-from .forms import ProjectForm, DonationForm, CommentForm, ReportForm
-from .models import Project, Donation, Report
+from decimal import Decimal  
+from django.http import HttpResponseForbidden  
+from django.db.models import Q  
+from .forms import *
+from .models import *
 
 @login_required
 def create_project(request):
@@ -21,7 +22,7 @@ def create_project(request):
 
 @login_required
 def manage_projects(request):
-    # Include canceled projects only for the creator
+
     user_projects = Project.objects.filter(created_by=request.user)
     all_projects = Project.objects.filter(cancelled=False)  
     return render(request, 'projects/manage_projects.html', {
@@ -37,6 +38,11 @@ def project_detail(request, project_id):
     donations = project.donations.all()
     total_donated = sum(donation.amount for donation in donations)
     comments = project.comments.all()
+
+    
+    similar_projects = Project.objects.filter(
+        Q(tags__icontains=project.tags) & ~Q(id=project.id)  
+    ).distinct()[:4]  
 
     if request.method == "POST":
         if 'donate' in request.POST:
@@ -69,6 +75,7 @@ def project_detail(request, project_id):
         'donations': donations,
         'comments': comments,
         'total_donated': total_donated,
+        'similar_projects': similar_projects,  
     })
 
 @login_required
@@ -102,7 +109,7 @@ def report_project(request, project_id):
 def cancel_project(request, project_id):
     project = Project.objects.get(id=project_id, created_by=request.user)
     total_donated = sum(donation.amount for donation in project.donations.all())
-    if total_donated < (Decimal('0.25') * project.target):  # Use Decimal for multiplication
+    if total_donated < (Decimal('0.25') * project.target):  
         project.cancelled = True
         project.save()
         messages.success(request, "Project has been successfully canceled.")
