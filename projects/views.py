@@ -63,23 +63,34 @@ def project_detail(request, project_id):
                 comment.user = request.user
                 comment.save()
                 return redirect('project_detail', project_id=project.id)
+        elif 'rate' in request.POST:
+            rating_form = RatingForm(request.POST)
+            if rating_form.is_valid():
+                rating = rating_form.save(commit=False)
+                rating.project = project
+                rating.user = request.user
+                rating.save()
+                return redirect('project_detail', project_id=project.id)
         else:
             form = DonationForm()
             comment_form = CommentForm()
+            rating_form = RatingForm()
     else:
         form = DonationForm()
         comment_form = CommentForm()
+        rating_form = RatingForm()
 
     return render(request, 'projects/project_detail.html', {
         'project': project,
         'form': form,
         'comment_form': comment_form,
+        'rating_form': rating_form,
         'donations': donations,
         'comments': comments,
         'total_donated': total_donated,
         'remaining': remaining,  # Pass remaining amount to the template
         'similar_projects': similar_projects,  
-
+        'average_rating': project.average_rating(),
     })
 
 

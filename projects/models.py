@@ -23,6 +23,12 @@ class Project(models.Model):
     def __str__(self):
         return self.title
 
+    def average_rating(self):
+        ratings = self.ratings.all()
+        if ratings.exists():
+            return sum(rating.value for rating in ratings) / ratings.count()
+        return 0
+
 class ProjectImage(models.Model):
     project = models.ForeignKey(Project, on_delete=models.CASCADE, related_name="images")
     image = models.ImageField(upload_to="projects/images/")
@@ -56,5 +62,14 @@ class Report(models.Model):
 
     def __str__(self):
         return f"Report by {self.user.email} on {self.project.title}"
+
+class Rating(models.Model):
+    project = models.ForeignKey(Project, on_delete=models.CASCADE, related_name="ratings")
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="ratings")
+    value = models.PositiveSmallIntegerField()  # Rating value (e.g., 1-5)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.user.email} rated {self.project.title} with {self.value}"
 
 
