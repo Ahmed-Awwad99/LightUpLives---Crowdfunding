@@ -96,7 +96,7 @@ We welcome contributions! To contribute:
 ## Contributors
 - [Ahmed Awwad](https://github.com/Ahmed-Awwad99)  
 - [Istabrak Mohamed](https://github.com/istabrak001)  
-- [Mohamed Sallam](https://github.com/Muhamed-Sallam)
+- [Mohamed Sallam](https://github.com/mu-sallam)
 - [Salma Elsallal](https://github.com/SALMASALLAL) 
 - [Salma Tamer](https://github.com/salmaali15)   
 
