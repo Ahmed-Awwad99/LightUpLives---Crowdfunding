@@ -35,6 +35,7 @@ def project_detail(request, project_id):
     project = Project.objects.get(id=project_id)
     donations = project.donations.all()
     total_donated = sum(donation.amount for donation in donations)
+    remaining = project.target - total_donated  # Calculate remaining amount
     comments = project.comments.all()
 
     if request.method == "POST":
@@ -68,6 +69,7 @@ def project_detail(request, project_id):
         'donations': donations,
         'comments': comments,
         'total_donated': total_donated,
+        'remaining': remaining,  # Pass remaining amount to the template
     })
 
 @login_required
