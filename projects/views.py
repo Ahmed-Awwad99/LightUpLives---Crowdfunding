@@ -98,6 +98,8 @@ def project_detail(request, project_id):
 def report_project(request, project_id):
     project = Project.objects.get(id=project_id)
     previous_reports = None
+    alert = None 
+    alert_type = None  
 
     if request.user == project.created_by:
         previous_reports = project.reports.all()
@@ -109,27 +111,45 @@ def report_project(request, project_id):
             report.project = project
             report.user = request.user
             report.save()
-            messages.success(request, "Your report has been submitted.")
-
-            return redirect('project_detail', project_id=project.id)
+            alert = "Your report has been submitted."
+            alert_type = "success"
+        else:
+            alert = "There was an error submitting your report. Please try again."
+            alert_type = "danger"
     else:
         form = ReportForm()
+
     return render(request, 'projects/report_project.html', {
         'form': form,
         'project': project,
         'user': request.user,
-        'previous_reports': previous_reports  # Pass previous reports to the template
+        'previous_reports': previous_reports,  
+        'alert': alert,
+        'alert_type': alert_type,
+        'redirect_url': f"/projects/{project_id}/", 
     })
 
 @login_required
 def cancel_project(request, project_id):
     project = Project.objects.get(id=project_id, created_by=request.user)
     total_donated = sum(donation.amount for donation in project.donations.all())
+    alert = None  
+    alert_type = None  
+
     if total_donated < (Decimal('0.25') * project.target):  
         project.cancelled = True
         project.save()
-        messages.success(request, "Project has been successfully canceled.")
+        alert = "Project has been successfully canceled."
+        alert_type = "success"
     else:
-        messages.error(request, "You cannot cancel this project as donations exceed 25% of the target.")
-    return redirect('manage_projects')
+        alert = "You cannot cancel this project as donations exceed 25% of the target."
+        alert_type = "danger"
+
+    return render(request, 'projects/manage_projects.html', {
+        'alert': alert,
+        'alert_type': alert_type,
+        'user_projects': Project.objects.filter(created_by=request.user),
+        'all_projects': Project.objects.filter(cancelled=False),
+    })
+
 

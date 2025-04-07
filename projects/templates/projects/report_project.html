@@ -1,6 +1,18 @@
 {% extends "base.html" %}
 {% block title %}Report Project{% endblock %}
 {% block content %}
+{% if alert %}
+<div class="alert alert-{{ alert_type }} alert-dismissible fade show" role="alert">
+    {{ alert }}
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+</div>
+
+<script>
+    document.querySelector('.btn-close').addEventListener('click', function () {
+        window.location.href = "{{ redirect_url }}";  
+    });
+</script>
+{% endif %}
 <h1>Report Project: {{ project.title }}</h1>
 <form method="POST" >
     {% csrf_token %}
@@ -23,7 +35,6 @@
     <div>
         <button type="submit" class="btn btn-danger">Submit Report</button>
     </div>
-</form>
 {% if user == project.created_by %}
 <h2>Previous Reports</h2>
 <ul>
@@ -36,10 +47,6 @@
         <p>No previous reports for this project.</p>
     {% endfor %}
 </ul>
-{% else %}
-<div class="alert alert-warning" role="alert">
-    <p>You do not have permission to view previous reports for this project.</p>
-</div>
 {% endif %}
 {% endblock %}
 
