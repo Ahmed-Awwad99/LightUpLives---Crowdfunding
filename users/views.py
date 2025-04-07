@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login
 from .forms import LoginForm ,UserRegistrationForm,UserEditForm, ProfileEditForm
 from django.http import HttpResponse
@@ -6,8 +6,8 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from .models import Profile
 from django.views import View
-from django.views.generic.edit import FormView
 from django.contrib.auth import get_user_model
+
 
 class UserLoginView(View):
     def get(self, request):
@@ -21,7 +21,7 @@ class UserLoginView(View):
             user = authenticate(request, email=data['email'], password=data['password'])  # Authenticate using email
             if user is not None:
                 login(request, user)
-                return render(request, 'users/login_success.html', {"user": user})
+                return render(request, 'users/home.html', {"user": user})
             else:
                 return render(request, 'users/sign_in.html', {"form": form, "error": "Invalid email or password"})
         return render(request, 'users/sign_in.html', {"form": form})
@@ -44,7 +44,9 @@ class RegisterView(View):
             user.set_password(user_form.cleaned_data['password'])
             user.save()
             Profile.objects.create(user=user)
-            return render(request, 'users/register_done.html', {"user": user})
+            #? Redirect to sign in page after successful registration
+            return redirect('sign_in')  
+        #? If the form is not valid, render the sign-up page with the form errors
         return render(request, 'users/sign_up.html', {"user_form": user_form})
 
 

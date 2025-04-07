@@ -150,8 +150,8 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
-LOGIN_URL = 'login'
-LOGOUT_URL = 'logout'
+LOGIN_URL = 'sign_in'
+LOGOUT_URL = 'sign_out'
 
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend' # For development purposes, use console backend to print emails to console
 

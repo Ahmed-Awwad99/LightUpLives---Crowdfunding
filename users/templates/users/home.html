@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 {% block title %} Home {% endblock %}
 {% block content %}
-<h1>Hallo from HOME</h1>
+<h1> {% if user.is_authenticated %}Welcome {{user.first_name}} {% else %}Hello From Our Website {% endif %} </h1>
 {% endblock %}
 
