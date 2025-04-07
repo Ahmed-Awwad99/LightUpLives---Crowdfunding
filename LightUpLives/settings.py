@@ -150,15 +150,30 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
-LOGIN_URL = 'login'
-LOGOUT_URL = 'logout'
+LOGIN_URL = 'sign_in'
+LOGOUT_URL = 'sign_out'
 
-EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend' # For development purposes, use console backend to print emails to console
+# EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend' # For development purposes, use console backend to print emails to console
 
 #EMAIL_HOST = 'smtp.gmail.com'   ## Use your email provider's SMTP server
 #EMAIL_PORT = 587   ## Use TLS for security
 
+
+########### Email Verfication ###########
+EMAIL = os.getenv('EMAIL')
+EMAIL_PASSWORD = os.getenv('EMAIL_PASSWORD')
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'  # Use your email provider's SMTP server
+EMAIL_PORT = 587  # Use TLS for security
+EMAIL_USE_TLS = True  # Use TLS for security
+EMAIL_HOST_USER =  EMAIL # Your email address
+EMAIL_HOST_PASSWORD = EMAIL_PASSWORD  # Your email password
+DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 AUTH_USER_MODEL = 'users.Users'  # Use the custom Users model for authentication
+
+
+
 
 
 
