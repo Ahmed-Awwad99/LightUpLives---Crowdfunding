@@ -160,12 +160,16 @@ LOGOUT_URL = 'sign_out'
 
 
 ########### Email Verfication ###########
+EMAIL = os.getenv('EMAIL')
+EMAIL_PASSWORD = os.getenv('EMAIL_PASSWORD')
+
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-Email_Host = 'smtp.gmail.com'  # Use your email provider's SMTP server
+EMAIL_HOST = 'smtp.gmail.com'  # Use your email provider's SMTP server
 EMAIL_PORT = 587  # Use TLS for security
-Email_USE_TLS = True  # Use TLS for security
-EMAIL_HOST_USER = 'xxx@gmail.com'  # Your email address
-EMAIL_HOST_PASSWORD = 'xxx'  # Your email password
+EMAIL_USE_TLS = True  # Use TLS for security
+EMAIL_HOST_USER =  EMAIL # Your email address
+EMAIL_HOST_PASSWORD = EMAIL_PASSWORD  # Your email password
+DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 AUTH_USER_MODEL = 'users.Users'  # Use the custom Users model for authentication
 
 
