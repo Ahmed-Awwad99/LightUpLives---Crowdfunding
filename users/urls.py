@@ -17,6 +17,7 @@ urlpatterns = [
     path("edit/", EditView.as_view(), name="edit"),
     path('profile/', profile, name='profile'),
     path('activate/<uidb64>/<token>/', ActivateAccountView.as_view(), name='activate_account'),  # Renamed for clarity
+    path('activation_failure/', ResendActivationEmailView.as_view(), name='resend_activation_mail'),  # Added activation failure view
 
 ]
 # Set the login URL for the login_required decorator

@@ -4,10 +4,26 @@
 {% block content %}
 <div class="activation-container">
     <h1>Account Activation Failed</h1>
-    <p>We're sorry, but we couldn't activate your account. The activation link may be invalid or expired.</p>
-    <div class="action-buttons">
-        <p>Please try registering again or contact support for assistance.</p>
-        <a href="{% url 'sign_up' %}" class="btn btn-primary">Register Again</a>
+    <p>We're sorry, but we couldn't activate your account yet. The activation link has been sent to your mail.</p>
+    
+    {% if error %}
+    <div class="alert alert-danger" role="alert">
+        {{ error }}
     </div>
+    {% endif %}
+    
+    <p>Please Check Your email for Activation and Sign in Again</p>
+    <p>if the activation link doesn't work:</p>
+    <p>Wtite down your Email to resend the Activation Mail.</p>
+    
+    <form method="post" action="{% url 'resend_activation_mail' %}">
+        {% csrf_token %}
+        <div class="form-group mb-3">
+            <label for="email">Your Email Address:</label>
+            <input type="email" class="form-control" id="email" name="email" placeholder="Enter your email" required>
+        </div>
+        <button type="submit" class="btn btn-secondary">Resend Activation Mail</button>
+    </form>
+    
 </div>
 {% endblock %}
