@@ -28,9 +28,6 @@
                             <a class="nav-link" href="{% url 'projects_home' %}">Projects</a>  <!-- Updated link -->
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="">Donations</a>
-                        </li>
-                        <li class="nav-item">
                             <form method="post" action="{% url 'sign_out' %}" class="d-inline">
                                 {% csrf_token %}
                                 <button type="submit" class="nav-link border-0 bg-transparent">Sign out</button>
