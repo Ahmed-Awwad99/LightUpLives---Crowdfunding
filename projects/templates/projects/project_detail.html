@@ -76,8 +76,7 @@
   <ul>
     {% for donation in donations %}
     <li>
-      {{ donation.donor.email }} donated {{ donation.amount }} EGP on {{
-      donation.donated_at }}
+      {{ donation.donor.email }} donated {{ donation.amount }} EGP on {{ donation.donated_at|date:"d M Y H:i" }}
     </li>
     {% endfor %}
   </ul>

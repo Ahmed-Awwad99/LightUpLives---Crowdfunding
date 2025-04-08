@@ -70,9 +70,17 @@ class ProjectDetailView(View):
 
     def post(self, request, project_id):
         project = get_object_or_404(Project, id=project_id)
+        donations = project.donations.all()
+        total_donated = sum(donation.amount for donation in donations)
+        remaining = project.target - total_donated
+
         if 'donate' in request.POST:
             form = DonationForm(request.POST)
             if form.is_valid():
+                donation_amount = form.cleaned_data['amount']
+                if donation_amount > remaining:
+                    messages.error(request, "Donation amount exceeds the remaining target.")
+                    return redirect('project_detail', project_id=project.id)
                 donation = form.save(commit=False)
                 donation.project = project
                 donation.donor = request.user
