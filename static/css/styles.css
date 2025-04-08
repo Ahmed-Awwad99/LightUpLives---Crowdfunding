@@ -15,10 +15,166 @@
 }
 
 .btn-success {
-    background-color: #2e7d32 !important; /* Green for buttons */
-    border-color: #2e7d32 !important;
+    background-color: #28a745 !important; /* Green for Success */
+    border-color: #28a745 !important;
+}
+
+.btn-success:hover {
+    background-color: #1e7e34 !important; /* Darker Green on Hover */
 }
 
 .list-group-item {
     border-color: #004d40 !important; /* Green border for list items */
+}
+
+/* General Theme */
+body {
+  font-family: "Poppins", "Inter", sans-serif;
+  background-color: #f8f9fa;
+  color: #343a40;
+}
+
+/* Headers Styling */
+h1, h2, h3, h4, h5, h6 {
+  color: #28a745 !important;
+}
+
+p, a {
+  color: #6c757d;
+}
+
+a {
+  color: #28a745;
+}
+
+a:hover {
+  color: #1e7e34;
+  text-decoration: none;
+}
+
+/* Card Components */
+.card {
+  background-color: #fff;
+  border-radius: 12px;
+  padding: 1.5rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.card:hover {
+  transform: scale(1.02);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
+}
+
+.card img {
+  object-fit: cover;
+  height: 200px;
+  border-radius: 12px 12px 0 0;
+}
+
+/* General Button Styling */
+.btn {
+  background-color: #28a745; /* Success Green */
+  color: #fff; /* White Text */
+  border: none;
+  border-radius: 6px; /* Rounded Corners */
+  padding: 0.5rem 1.25rem; /* Padding */
+  font-size: 1rem;
+  font-weight: 500;
+  text-align: center;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.btn:hover {
+  background-color: #1e7e34; /* Darker Green on Hover */
+  transform: scale(1.05); /* Slight Scale Effect */
+}
+
+.btn:active {
+  transform: scale(0.95); /* Slight Shrink on Click */
+}
+
+/* Danger Button (For Report a Project) */
+.btn-danger {
+  background-color: #dc3545; /* Red for Danger */
+}
+
+.btn-danger:hover {
+  background-color: #a71d2a; /* Darker Red on Hover */
+}
+
+.btn-outline-success {
+  background-color: transparent;
+  color: #28a745;
+  border: 1px solid #28a745;
+}
+
+.btn-outline-success:hover {
+  background-color: #28a745;
+  color: #fff;
+}
+
+/* Forms */
+input, textarea, select {
+  border: 1px solid #ced4da;
+  border-radius: 8px;
+  padding: 0.75rem;
+  width: 100%;
+  transition: border-color 0.2s;
+}
+
+input:focus, textarea:focus, select:focus {
+  border-color: #28a745;
+  outline: none;
+}
+
+/* Similar Projects Section */
+.similar-projects {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 2rem;
+  margin-top: 2rem; 
+}
+
+.similar-projects .card {
+  padding: 1rem;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.similar-projects .card:hover {
+  transform: scale(1.05);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
+}
+
+.similar-projects .card-title {
+  font-size: 1.5rem;
+  font-weight: bold;
+}
+
+/* Dark Mode */
+body.dark-mode {
+  background-color: #343a40;
+  color: #f8f9fa;
+}
+
+body.dark-mode .card {
+  background-color: #495057;
+  color: #f8f9fa;
+}
+
+body.dark-mode .btn {
+  background-color: #28a745;
+}
+
+body.dark-mode input, body.dark-mode textarea, body.dark-mode select {
+  background-color: #495057;
+  color: #f8f9fa;
+  border-color: #6c757d;
+}
+
+.text-primary {
+  color: #28a745 !important;
 }
