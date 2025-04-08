@@ -15,7 +15,17 @@ def create_project(request):
             project = form.save(commit=False)
             project.created_by = request.user
             project.save()
-
+            tag_input = request.POST.get('tags', '[]')  # Tagify بيرجع JSON
+            import json
+            try:
+                tag_data = json.loads(tag_input)
+                for tag_item in tag_data:
+                    tag_name = tag_item['value'].strip()
+                    if tag_name:
+                        tag_obj, _ = Tag.objects.get_or_create(name=tag_name)
+                        project.tags.add(tag_obj)
+            except json.JSONDecodeError:
+                pass 
             for image in request.FILES.getlist('images'):
                 ProjectImage.objects.create(project=project, image=image)
             return redirect('home')
@@ -42,9 +52,11 @@ def project_detail(request, project_id):
     total_donated = sum(donation.amount for donation in donations)
     comments = project.comments.all()
     remaining = project.target - total_donated  # Calculate remaining amount
+
+    # Fix the similar_projects query
     similar_projects = Project.objects.filter(
-        Q(tags__icontains=project.tags) & ~Q(id=project.id)  
-    ).distinct()[:4]  
+        tags__in=project.tags.all()
+    ).exclude(id=project.id).distinct()[:4]
 
     if request.method == "POST":
         if 'donate' in request.POST:
@@ -71,10 +83,6 @@ def project_detail(request, project_id):
                 rating.user = request.user
                 rating.save()
                 return redirect('project_detail', project_id=project.id)
-        else:
-            form = DonationForm()
-            comment_form = CommentForm()
-            rating_form = RatingForm()
     else:
         form = DonationForm()
         comment_form = CommentForm()
@@ -92,7 +100,6 @@ def project_detail(request, project_id):
         'similar_projects': similar_projects,  
         'average_rating': project.average_rating(),
     })
-
 
 @login_required
 def report_project(request, project_id):
@@ -151,5 +158,10 @@ def cancel_project(request, project_id):
         'user_projects': Project.objects.filter(created_by=request.user),
         'all_projects': Project.objects.filter(cancelled=False),
     })
+
+def projects_by_tag(request, tag_name):
+    tag = Tag.objects.get(name=tag_name)
+    projects = tag.projects.filter(cancelled=False)
+    return render(request, 'projects/projects_by_tag.html', {'tag': tag, 'projects': projects})
 
 

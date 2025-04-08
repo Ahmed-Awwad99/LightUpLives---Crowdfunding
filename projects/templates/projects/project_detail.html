@@ -14,6 +14,11 @@
       <p><strong>Target:</strong> {{ project.target }} EGP</p>
       <p><strong>Total Donated:</strong> {{ total_donated }} EGP</p>
       <p><strong>Remaining:</strong> {{ remaining }} EGP</p>
+      <p><strong>Tags:</strong>
+        {% for tag in project.tags.all %}
+            <a href="{% url 'projects_by_tag' tag.name %}" class="badge bg-primary text-white">{{ tag.name }}</a>
+        {% endfor %}
+      </p>
     </div>
 
     <!-- Right Section: Image -->
