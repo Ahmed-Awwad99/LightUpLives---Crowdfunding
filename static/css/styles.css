@@ -176,7 +176,7 @@ body.dark-mode input, body.dark-mode textarea, body.dark-mode select {
 }
 
 .text-primary {
-  color: #28a745 !important;
+  color: #1e7e34 !important;
 }
 
 /* Add a Comment Section */
@@ -194,7 +194,7 @@ body.dark-mode input, body.dark-mode textarea, body.dark-mode select {
 }
 
 .add-comment textarea:focus {
-  border-color: #28a745;
+  border-color:  #1e7e34;
   outline: none;
 }
 
