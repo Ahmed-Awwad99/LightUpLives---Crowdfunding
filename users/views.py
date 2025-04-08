@@ -1,12 +1,13 @@
 from django.shortcuts import render, redirect
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import authenticate, login, update_session_auth_hash
+from django.contrib import messages
 from .forms import LoginForm, UserRegistrationForm, UserEditForm, ProfileEditForm
 from django.contrib.auth.decorators import login_required
 from .models import Users, Profile
 from django.views import View
 ################### Imports for authentication and email functions ###################
 from django.contrib.auth import get_user_model
-from django.contrib.auth.forms import PasswordResetForm, SetPasswordForm
+from django.contrib.auth.forms import PasswordResetForm, SetPasswordForm, PasswordChangeForm
 from django.contrib.auth.tokens import default_token_generator
 from django.utils.encoding import force_bytes, force_str
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
@@ -204,6 +205,31 @@ class CustomPasswordResetConfirmView(View):
                 return render(request, "users/password_reset_confirm.html", {"password_changed": True, "valid_link": True})
             return render(request, "users/password_reset_confirm.html", {"form": form, "valid_link": True})
         return render(request, "users/password_reset_confirm.html", {"valid_link": False})
+
+
+class CustomPasswordChangeView(View):
+    def get(self, request):
+        form = PasswordChangeForm(request.user)
+        return render(request, 'users/password_change.html', {
+            'form': form,
+            'password_changed': False
+        })
+
+    def post(self, request):
+        form = PasswordChangeForm(request.user, request.POST)
+        if form.is_valid():
+            user = form.save()
+            # Keep the user logged in
+            update_session_auth_hash(request, user)
+            messages.success(request, 'Your password was successfully updated!')
+            return render(request, 'users/password_change.html', {
+                'form': None,
+                'password_changed': True
+            })
+        return render(request, 'users/password_change.html', {
+            'form': form,
+            'password_changed': False
+        })
 
 
 def home(request):
