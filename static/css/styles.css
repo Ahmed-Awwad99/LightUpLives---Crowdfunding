@@ -178,3 +178,40 @@ body.dark-mode input, body.dark-mode textarea, body.dark-mode select {
 .text-primary {
   color: #28a745 !important;
 }
+
+/* Add a Comment Section */
+.add-comment {
+  margin-top: 2rem;
+}
+
+.add-comment textarea {
+  border: 1px solid #ced4da;
+  border-radius: 8px;
+  padding: 1rem;
+  width: 100%;
+  font-size: 1rem;
+  transition: border-color 0.2s;
+}
+
+.add-comment textarea:focus {
+  border-color: #28a745;
+  outline: none;
+}
+
+.add-comment button {
+  background-color: #28a745;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  padding: 0.75rem 1.5rem;
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.add-comment button:hover {
+  background-color: #1e7e34;
+  transform: scale(1.05);
+}
+
