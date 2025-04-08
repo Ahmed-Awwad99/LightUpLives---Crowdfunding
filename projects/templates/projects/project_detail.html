@@ -59,6 +59,10 @@
 <p class="text-danger">
   This project has been canceled and is no longer accepting donations.
 </p>
+{% elif donation_closed %}
+<p class="text-success">
+  Thank you, Donation for this project has been completed.
+</p>
 {% else %}
 {% if user.is_authenticated %}
 <a href="{% url 'report_project' project.id %}" class="btn btn-danger"

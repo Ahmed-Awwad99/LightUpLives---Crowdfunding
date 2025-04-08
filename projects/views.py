@@ -55,6 +55,8 @@ class ProjectDetailView(View):
         comment_form = CommentForm()
         rating_form = RatingForm()
 
+        donation_closed = total_donated >= project.target  # Check if the target is reached
+
         return render(request, 'projects/project_detail.html', {
             'project': project,
             'form': form,
@@ -66,6 +68,7 @@ class ProjectDetailView(View):
             'remaining': remaining,
             'similar_projects': similar_projects,
             'average_rating': project.average_rating(),
+            'donation_closed': donation_closed,  # Pass the flag to the template
         })
 
     def post(self, request, project_id):
@@ -73,6 +76,10 @@ class ProjectDetailView(View):
         donations = project.donations.all()
         total_donated = sum(donation.amount for donation in donations)
         remaining = project.target - total_donated
+
+        if total_donated >= project.target:  # Prevent donations if the target is reached
+            messages.info(request, "Thank you, Donation for this project has been completed.")
+            return redirect('project_detail', project_id=project.id)
 
         if 'donate' in request.POST:
             form = DonationForm(request.POST)
