@@ -29,7 +29,7 @@
 
 /* General Theme */
 body {
-  font-family: "Poppins", "Inter", sans-serif;
+  font-family: "Inter", "Roboto", sans-serif;
   background-color: #f8f9fa;
   color: #343a40;
 }
@@ -215,3 +215,75 @@ body.dark-mode input, body.dark-mode textarea, body.dark-mode select {
   transform: scale(1.05);
 }
 
+/* Average Rating Section */
+.average-rating {
+  margin-top: 2rem;
+  font-size: 1.5rem;
+  color: #28a745;
+}
+
+.average-rating span {
+  font-weight: bold;
+  color: #ff9800; /* Orange for the score */
+}
+
+/* Rate this Project Section */
+.rate-project {
+  margin-top: 2rem;
+}
+
+.rate-project select {
+  border: 1px solid #ced4da;
+  border-radius: 8px;
+  padding: 0.75rem;
+  font-size: 1rem;
+  width: 100%;
+  transition: border-color 0.2s;
+}
+
+.rate-project select:focus {
+  border-color: #28a745;
+  outline: none;
+}
+
+.rate-project button {
+  background-color: #28a745;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  padding: 0.75rem 1.5rem;
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+  margin-top: 1rem;
+}
+
+.rate-project button:hover {
+  background-color: #1e7e34;
+  transform: scale(1.05);
+}
+
+/* Star Rating Section */
+.star-rating {
+  display: flex;
+  flex-direction: row-reverse;
+  justify-content: flex-start;
+}
+
+.star-rating input {
+  display: none;
+}
+
+.star-rating label {
+  font-size: 2rem;
+  color: #ddd;
+  cursor: pointer;
+  transition: color 0.2s ease-in-out;
+}
+
+.star-rating input:checked ~ label,
+.star-rating label:hover,
+.star-rating label:hover ~ label {
+  color: #ffc107; /* Yellow for selected stars */
+}

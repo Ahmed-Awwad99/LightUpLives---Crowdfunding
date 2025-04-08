@@ -108,6 +108,7 @@ class ProjectDetailView(View):
                 rating.project = project
                 rating.user = request.user
                 rating.save()
+                messages.success(request, "Your rating has been submitted.")
                 return redirect('project_detail', project_id=project.id)
         return self.get(request, project_id)
 

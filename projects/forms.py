@@ -59,7 +59,7 @@ class RatingForm(forms.ModelForm):
         model = Rating
         fields = ['value']
         widgets = {
-            'value': forms.NumberInput(attrs={'class': 'form-control', 'min': 1, 'max': 5}),
+            'value': forms.NumberInput(attrs={'type': 'hidden'}),
         }
 
 
