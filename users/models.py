@@ -31,6 +31,7 @@ class CustomUserManager(BaseUserManager):
         return self.create_user(email, password, **extra_fields)
 
 class Users(AbstractUser):
+    token_created_at = models.DateTimeField(null=True, blank=True)
     email_confirmed = models.BooleanField(default=False)  # Add a field to track email confirmation status
     username = None  # Remove the username field
     email = models.EmailField(unique=True)  # Make email unique and required

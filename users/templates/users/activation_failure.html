@@ -14,13 +14,11 @@
     
     <p>Please Check Your email for Activation and Sign in Again</p>
     <p>if the activation link doesn't work:</p>
-    <p>Wtite down your Email to resend the Activation Mail.</p>
     
     <form method="post" action="{% url 'resend_activation_mail' %}">
         {% csrf_token %}
-        <div class="form-group mb-3">
-            <label for="email">Your Email Address:</label>
-            <input type="email" class="form-control" id="email" name="email" placeholder="Enter your email" required>
+        <div class="form-group">
+            <input type="hidden" name="email" value="{{ user.email }}">
         </div>
         <button type="submit" class="btn btn-secondary">Resend Activation Mail</button>
     </form>
