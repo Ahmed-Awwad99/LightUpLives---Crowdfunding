@@ -62,8 +62,8 @@ class ProjectDetailView(View):
         comments = project.comments.all()
         remaining = project.target - total_donated
         similar_projects = Project.objects.filter(
-            Q(tags__icontains=project.tags) & ~Q(id=project.id)
-        ).distinct()[:4]
+    tags__name__icontains=project.tags.name).exclude(id=project.id).distinct()[:4]
+
 
         form = DonationForm()
         comment_form = CommentForm()

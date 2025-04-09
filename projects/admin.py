@@ -10,7 +10,6 @@ admin.site.register(Donation)
 admin.site.register(Comment)
 admin.site.register(Report)
 admin.site.register(Tag)  
-admin.site.register(ProjectImage)  
 
 
 
