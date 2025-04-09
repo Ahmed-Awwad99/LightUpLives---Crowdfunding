@@ -92,13 +92,12 @@ class ProjectDetailView(View):
         donations = project.donations.all()
         total_donated = sum(donation.amount for donation in donations)
         remaining = project.target - total_donated
-        # Fix the similar_projects query
         similar_projects = Project.objects.filter(
-        tags__in=project.tags.all()).exclude(id=project.id).distinct()[:4]
+            tags__in=project.tags.all()).exclude(id=project.id).distinct()[:4]
         donation_closed = total_donated >= project.target
-        if donation_closed:  # Prevent donations if the target is reached
+
+        if donation_closed:
             messages.info(request, "Thank you, Donation for this project has been completed.")
-            # return redirect('project_detail', project_id=project.id)
 
         if 'donate' in request.POST and not donation_closed:
             form = DonationForm(request.POST)
@@ -121,6 +120,11 @@ class ProjectDetailView(View):
                 comment.save()
                 return redirect('project_detail', project_id=project.id)
         elif 'rate' in request.POST:
+            # Check if the user has already rated this project
+            if project.ratings.filter(user=request.user).exists():
+                messages.error(request, "You have already rated this project.")
+                return redirect('project_detail', project_id=project.id)
+
             rating_form = RatingForm(request.POST)
             if rating_form.is_valid():
                 rating = rating_form.save(commit=False)
@@ -129,7 +133,7 @@ class ProjectDetailView(View):
                 rating.save()
                 messages.success(request, "Your rating has been submitted.")
                 return redirect('project_detail', project_id=project.id)
-            
+
         return self.get(request, project_id)
 
 
