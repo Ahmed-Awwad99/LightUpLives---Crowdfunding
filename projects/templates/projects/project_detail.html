@@ -12,11 +12,18 @@
     <div class="col-md-6">
       <h1 class="fw-bold text-primary">{{ project.title }}</h1>
       <h5 class="text-muted">Image description and details</h5>
+
       <p class="text-dark">{{ project.description }}</p>
       <p><strong>Category:</strong> <span class="badge bg-success">{{ project.category.name }}</span></p>
       <p><strong>Target:</strong> <span class="text-primary">{{ project.target }} EGP</span></p>
       <p><strong>Total Donated:</strong> <span class="text-success">{{ total_donated }} EGP</span></p>
       <p><strong>Remaining:</strong> <span class="text-danger">{{ remaining }} EGP</span></p>
+      <p><strong>Tags:</strong>
+        {% for tag in project.tags.all %}
+            <a href="{% url 'projects_by_tag' tag.name %}" class="badge bg-primary text-white">{{ tag.name }}</a>
+        {% endfor %}
+      </p>
+
     </div>
 
     <!-- Right Section: Image -->

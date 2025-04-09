@@ -5,7 +5,7 @@ from django.contrib import messages
 from django.db.models import Q
 from decimal import Decimal
 from .forms import ProjectForm, DonationForm, CommentForm, ReportForm, RatingForm
-from .models import Project, ProjectImage, Donation, Comment, Report, Rating
+from .models import Project, ProjectImage, Donation, Comment, Report, Rating,Tag
 
 
 class CreateProjectView(LoginRequiredMixin, View):
@@ -19,6 +19,19 @@ class CreateProjectView(LoginRequiredMixin, View):
             project = form.save(commit=False)
             project.created_by = request.user
             project.save()
+
+            tag_input = request.POST.get('tags', '[]')  
+            import json
+            try:
+                tag_data = json.loads(tag_input)
+                for tag_item in tag_data:
+                    tag_name = tag_item['value'].strip()
+                    if tag_name:
+                        tag_obj, _ = Tag.objects.get_or_create(name=tag_name)
+                        project.tags.add(tag_obj)
+            except json.JSONDecodeError:
+                pass 
+
             for image in request.FILES.getlist('images'):
                 ProjectImage.objects.create(project=project, image=image)
             return redirect('home')
@@ -33,6 +46,7 @@ class ManageProjectsView(LoginRequiredMixin, View):
             'user_projects': user_projects,
             'all_projects': all_projects,
         })
+
 
 
 class ProjectsHomeView(View):
@@ -76,6 +90,10 @@ class ProjectDetailView(View):
         donations = project.donations.all()
         total_donated = sum(donation.amount for donation in donations)
         remaining = project.target - total_donated
+        # Fix the similar_projects query
+        similar_projects = Project.objects.filter(
+            tags__in=project.tags.all()
+        ).exclude(id=project.id).distinct()[:4]
 
         if total_donated >= project.target:  # Prevent donations if the target is reached
             messages.info(request, "Thank you, Donation for this project has been completed.")
@@ -110,6 +128,7 @@ class ProjectDetailView(View):
                 rating.save()
                 messages.success(request, "Your rating has been submitted.")
                 return redirect('project_detail', project_id=project.id)
+            
         return self.get(request, project_id)
 
 
@@ -149,5 +168,10 @@ class CancelProjectView(LoginRequiredMixin, View):
         else:
             messages.error(request, "You cannot cancel this project as donations exceed 25% of the target.")
         return redirect('manage_projects')
+
+def projects_by_tag(request, tag_name):
+    tag = Tag.objects.get(name=tag_name)
+    projects = tag.projects.filter(cancelled=False)
+    return render(request, 'projects/projects_by_tag.html', {'tag': tag, 'projects': projects})
 
 

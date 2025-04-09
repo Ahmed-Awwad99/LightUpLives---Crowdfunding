@@ -33,10 +33,12 @@
     <div class="mb-3">
         {{ form.target.label_tag }} {{ form.target }}
     </div>
-
     <div class="mb-3">
-        {{ form.tags.label_tag }} {{ form.tags }}
+        <label for="tag-input">Tags</label>
+        <input name="tags" id="tag-input" class="form-control" />
     </div>
+    
+    
 
     <div class="mb-3">
         {{ form.start_date.label_tag }} {{ form.start_date }}
@@ -53,5 +55,10 @@
 
     <button type="submit" class="btn btn-success">Create Project</button>
 </form>
+
+<script>
+    var input = document.querySelector('#tag-input');
+    var tagify = new Tagify(input);
+</script>
 
 {% endblock %}

@@ -6,6 +6,7 @@ from .views import (
     ProjectDetailView,
     ReportProjectView,
     CancelProjectView,
+    projects_by_tag
 )
 
 urlpatterns = [
@@ -15,4 +16,6 @@ urlpatterns = [
     path('<int:project_id>/', ProjectDetailView.as_view(), name='project_detail'),
     path('<int:project_id>/report/', ReportProjectView.as_view(), name='report_project'),
     path('<int:project_id>/cancel/', CancelProjectView.as_view(), name='cancel_project'),
+    path('tag/<str:tag_name>/', projects_by_tag, name='projects_by_tag'),
+
 ]
