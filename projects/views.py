@@ -4,7 +4,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib import messages
 from django.db.models import Q
 from decimal import Decimal
-from .forms import ProjectForm, DonationForm, CommentForm, ReportForm, RatingForm
+from .forms import ProjectForm, DonationForm, CommentForm, ReportForm, RatingForm, CommentReportForm
 from .models import Project, ProjectImage, Donation, Comment, Report, Rating, Tag, Category
 
 
@@ -132,6 +132,23 @@ class ProjectDetailView(View):
                 rating.user = request.user
                 rating.save()
                 messages.success(request, "Your rating has been submitted.")
+                return redirect('project_detail', project_id=project.id)
+        elif 'report_comment' in request.POST:
+            comment_id = request.POST.get('comment_id')
+            comment = get_object_or_404(Comment, id=comment_id)
+
+            # Check if the user has already reported this comment
+            if comment.reports.filter(user=request.user).exists():
+                messages.error(request, "You have already reported this comment.")
+                return redirect('project_detail', project_id=project.id)
+
+            report_form = CommentReportForm(request.POST)
+            if report_form.is_valid():
+                report = report_form.save(commit=False)
+                report.comment = comment
+                report.user = request.user
+                report.save()
+                messages.success(request, "Your report has been submitted.")
                 return redirect('project_detail', project_id=project.id)
 
         return self.get(request, project_id)

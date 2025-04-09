@@ -6,6 +6,8 @@ from .models import Report
 from django.forms import FileInput
 from django.core.exceptions import ValidationError
 from .models import Rating
+from .models import CommentReport
+
 class ProjectForm(forms.ModelForm):
     class Meta:
         model = Project
@@ -59,6 +61,14 @@ class RatingForm(forms.ModelForm):
         fields = ['value']
         widgets = {
             'value': forms.NumberInput(attrs={'type': 'hidden'}),
+        }
+
+class CommentReportForm(forms.ModelForm):
+    class Meta:
+        model = CommentReport
+        fields = ['reason']
+        widgets = {
+            'reason': forms.Textarea(attrs={'class': 'form-control', 'placeholder': 'Enter the reason for reporting this comment...'}),
         }
 
 
