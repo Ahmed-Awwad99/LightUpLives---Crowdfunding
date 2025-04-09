@@ -1,10 +1,7 @@
 {% extends "base.html" %}
-{% load static %}
 {% block title %}Home{% endblock %}
 
 {% block content %}
-<link rel="stylesheet" href="{% static 'css/styles.css' %}">
-
 <div class="flex flex-col md:flex-row gap-6 px-4 py-10">
     <div class="flex-1">
         <h1 class="text-3xl font-bold mb-6 text-green-700">
@@ -14,35 +11,14 @@
                 Hello From Our Website
             {% endif %}
         </h1>
-        <p class="text-gray-600">Start exploring amazing projects from the sidebar ➡️</p>
-
-        <!-- Search Bar -->
-        <form method="GET" action="{% url 'search_projects' %}" class="mt-4">
-            <input type="text" name="q" placeholder="Search projects by title or tag"
-                   class="form-control mb-3" value="{{ request.GET.q }}">
-            <button type="submit" class="btn btn-success">Search</button>
-        </form>
         
+
         <!-- Project Management Buttons -->
         <div class="d-flex flex-column flex-md-row align-items-start align-items-md-center mt-4">
             <a href="{% url 'create_project' %}" class="btn btn-success mb-2 mb-md-0 me-md-2">Create Project</a>
             <a href="{% url 'manage_projects' %}" class="btn btn-outline-success">Manage Projects</a>
         </div>
     </div>
-
-    <aside class="w-full md:w-64 bg-white rounded-xl shadow-lg p-4 h-96 overflow-y-auto sticky top-10 self-start">
-        <h2 class="text-xl font-semibold text-green-700 mb-4 text-center">Categories</h2>
-        <div class="flex flex-col gap-3">
-            {% for category in categories %}
-                <a href="{% url 'projects_by_category' category.name %}"
-                   class="block py-2 px-3 rounded-lg text-center text-green-700 hover:bg-green-100 transition font-medium">
-                    {{ category.name }}
-                </a>
-            {% empty %}
-                <p class="text-gray-500 text-center">No categories available.</p>
-            {% endfor %}
-        </div>
-    </aside>
 </div>
 
 <!-- Projects Display -->

@@ -17,31 +17,52 @@
 <body>
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
         <div class="container">
-            <a class="navbar-brand text-primary fw-bold" href="/">Light Up Lives</a>
+            <!-- Centered Website Name -->
+            <a class="navbar-brand mx-auto text-primary fw-bold" href="/">Light Up Lives</a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto">
+                    <!-- Left Side: Search and Categories -->
+                    <li class="nav-item me-3">
+                        <form method="GET" action="{% url 'search_projects' %}" class="d-flex">
+                            <input type="text" name="q" placeholder="Search" class="form-control me-2">
+                            <button type="submit" class="btn btn-outline-light">Search</button>
+                        </form>
+                    </li>
+                    <li class="nav-item dropdown me-3">
+                        <a class="nav-link dropdown-toggle text-light" href="#" id="categoriesDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            Categories
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="categoriesDropdown">
+                            {% for category in categories %}
+                                <li><a class="dropdown-item" href="{% url 'projects_by_category' category.name %}">{{ category.name }}</a></li>
+                            {% empty %}
+                                <li><span class="dropdown-item">No categories available</span></li>
+                            {% endfor %}
+                        </ul>
+                    </li>
+                    <!-- Right Side: Navigation Links -->
                     <li class="nav-item">
-                        <a class="nav-link" href="{% url 'home' %}">Home</a>
+                        <a class="nav-link text-light" href="{% url 'home' %}">Home</a>
                     </li>
                     {% if user.is_authenticated %}
                         <li class="nav-item">
-                            <a class="nav-link" href="{% url 'edit' %}">Profile</a>
+                            <a class="nav-link text-light" href="{% url 'edit' %}">Profile</a>
                         </li>
                         <li class="nav-item">
                             <form method="post" action="{% url 'sign_out' %}" class="d-inline">
                                 {% csrf_token %}
-                                <button type="submit" class="nav-link border-0 bg-transparent">Sign out</button>
+                                <button type="submit" class="nav-link border-0 bg-transparent text-light">Sign out</button>
                             </form>
                         </li>
                     {% else %}
                         <li class="nav-item">
-                            <a class="nav-link" href="{% url 'sign_in' %}">Sign in</a>
+                            <a class="nav-link text-light" href="{% url 'sign_in' %}">Sign in</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="{% url 'sign_up' %}">Sign up</a>
+                            <a class="nav-link text-light" href="{% url 'sign_up' %}">Sign up</a>
                         </li>
                     {% endif %}
                 </ul>
