@@ -11,26 +11,55 @@
                 Hello From Our Website
             {% endif %}
         </h1>
-        
 
-        <!-- Project Management Buttons -->
-        <div class="d-flex flex-column flex-md-row align-items-start align-items-md-center mt-4">
-            <a href="{% url 'create_project' %}" class="btn btn-success mb-2 mb-md-0 me-md-2">Create Project</a>
-            <a href="{% url 'manage_projects' %}" class="btn btn-outline-success">Manage Projects</a>
-        </div>
+        <!-- Create Project Button -->
+        <a href="{% url 'create_project' %}" class="btn btn-success mb-4">Create Project</a>
     </div>
 </div>
 
-<!-- Projects Display -->
-<h2 class="text-2xl font-bold mb-4 text-green-700 mt-8 px-4">Featured Projects</h2>
-<div class="similar-projects mt-5 px-4">
-  {% for project in all_projects %}
-  <div class="card">
-    <img src="{{ project.images.first.image.url }}" alt="{{ project.title }}">
-    <div class="card-body">
-      <h5 class="card-title">{{ project.title }}</h5>
-      <p class="card-text">{{ project.description|truncatechars:100 }}</p>
-      <a href="{% url 'project_detail' project.id %}" class="btn">View Project</a>
+<!-- Highest Rated Projects Slider -->
+<h2 class="text-2xl font-bold mb-4 text-green-700 mt-8 px-4">Top Rated Projects</h2>
+<div id="topRatedProjectsCarousel" class="carousel slide" data-bs-ride="carousel">
+    <div class="carousel-inner">
+        {% for project in top_rated_projects %}
+            <div class="carousel-item {% if forloop.first %}active{% endif %}">
+                <img src="{{ project.images.first.image.url }}" class="d-block w-100" alt="{{ project.title }}">
+                <div class="carousel-caption d-none d-md-block">
+                    <h5>{{ project.title }}</h5>
+                    <p>{{ project.description|truncatechars:100 }}</p>
+                    <a href="{% url 'project_detail' project.id %}" class="btn btn-primary">View Project</a>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+    <button class="carousel-control-prev" type="button" data-bs-target="#topRatedProjectsCarousel" data-bs-slide="prev">
+        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Previous</span>
+    </button>
+    <button class="carousel-control-next" type="button" data-bs-target="#topRatedProjectsCarousel" data-bs-slide="next">
+        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Next</span>
+    </button>
+</div>
+
+<!-- Latest Projects -->
+<h2 class="text-2xl font-bold mb-4 text-green-700 mt-8 px-4">Latest Projects</h2>
+<div class="row row-cols-1 row-cols-md-3 g-4 px-4">
+  {% for project in latest_projects %}
+  <div class="col">
+    <div class="card h-100">
+      <img src="{{ project.images.first.image.url }}" class="card-img-top" alt="{{ project.title }}">
+      <div class="card-body">
+        <h5 class="card-title">{{ project.title }}</h5>
+        <p class="card-text">{{ project.description|truncatechars:100 }}</p>
+        <p class="card-text">
+          <small class="text-muted">{{ project.created_at|date:"F j, Y" }}</small>
+        </p>
+        <a href="{% url 'project_detail' project.id %}" class="btn btn-primary">View Project</a>
+      </div>
+      <div class="card-footer">
+        <small class="text-muted">{{ project.funded_amount }} funded</small>
+      </div>
     </div>
   </div>
   {% empty %}
