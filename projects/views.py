@@ -48,13 +48,6 @@ class ManageProjectsView(LoginRequiredMixin, View):
         })
 
 
-
-class ProjectsHomeView(View):
-    def get(self, request):
-        categories = Category.objects.all()
-        return render(request, 'projects/projects_home.html', {'categories': categories})
-
-
 class ProjectDetailView(View):
     def get(self, request, project_id):
         project = get_object_or_404(Project, id=project_id)
