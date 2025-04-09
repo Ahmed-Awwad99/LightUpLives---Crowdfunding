@@ -29,7 +29,7 @@ class UserLoginView(View):
             user = authenticate(request, email=data['email'], password=data['password'])  # Authenticate using email
             if user is not None:
                 login(request, user)
-                return render(request, 'users/home.html', {"user": user})
+                return render(request, 'home.html', {"user": user})
             else:
                 return render(request, 'users/sign_in.html', {"form": form, "error": "Invalid email or password"})
         return render(request, 'users/sign_in.html', {"form": form})
@@ -95,7 +95,7 @@ class UserLoginView(View):
             if user is not None:
                 if user.email_confirmed:
                     login(request, user)
-                    return render(request, 'users/home.html', {"user": user})
+                    return render(request, 'home.html', {"user": user})
                 else:
                     return render(request, 'users/activation_failure.html',{"user": user})
             else:
@@ -175,14 +175,6 @@ class EditView(View):
             profile_form.save()
         return render(request, 'users/edit.html', {'user_form': user_form, 'profile_form': profile_form})
 
-class IndexView(View):
-    def get(self, request):
-        categories = Category.objects.all()
-        all_projects = Project.objects.filter(cancelled=False)
-        return render(request, 'home.html', {
-            'categories': categories,
-            'all_projects': all_projects
-        })
 
 class CustomPasswordResetView(View):
     def get(self, request):
@@ -291,7 +283,7 @@ class CustomPasswordChangeView(View):
 
 
 def home(request):
-    return render(request, 'users/home.html')
+    return render(request, 'home.html')
 
 def sign_in(request):
     return render(request, 'users/sign_in.html')
