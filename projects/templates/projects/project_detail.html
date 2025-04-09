@@ -127,17 +127,11 @@
   <li class="list-group-item">
     <strong>{{ comment.user.email }}</strong> ({{ comment.created_at|date:"d M Y
     H:i" }}): {{ comment.content }} {% if user.is_authenticated %}
-    <form method="POST" style="display: inline">
-      {% csrf_token %}
-      <input type="hidden" name="comment_id" value="{{ comment.id }}" />
-      <button
-        type="submit"
-        name="report_comment"
-        class="btn btn-link text-danger"
-      >
-        Report
-      </button>
-    </form>
+    <a
+      href="{% url 'report_comment' comment.id %}"
+      class="btn btn-link text-danger"
+      >Report</a
+    >
     {% endif %}
   </li>
   {% endfor %}

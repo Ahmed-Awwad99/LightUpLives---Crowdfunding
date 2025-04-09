@@ -213,3 +213,34 @@ class SearchProjectsView(View):
         return render(request, 'projects/search_results.html', {'projects': projects, 'query': query})
 
 
+class ReportCommentView(LoginRequiredMixin, View):
+    def get(self, request, comment_id):
+        comment = get_object_or_404(Comment, id=comment_id)
+        form = CommentReportForm()
+        return render(request, 'projects/report_comment.html', {
+            'form': form,
+            'comment': comment,
+        })
+
+    def post(self, request, comment_id):
+        comment = get_object_or_404(Comment, id=comment_id)
+
+        # Check if the user has already reported this comment
+        if comment.reports.filter(user=request.user).exists():
+            messages.error(request, "You have already reported this comment.")
+            return redirect('project_detail', project_id=comment.project.id)
+
+        form = CommentReportForm(request.POST)
+        if form.is_valid():
+            report = form.save(commit=False)
+            report.comment = comment
+            report.user = request.user
+            report.save()
+            messages.success(request, "Your report has been submitted.")
+            return redirect('project_detail', project_id=comment.project.id)
+        return render(request, 'projects/report_comment.html', {
+            'form': form,
+            'comment': comment,
+        })
+
+
