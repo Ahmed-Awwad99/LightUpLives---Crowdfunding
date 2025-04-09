@@ -93,14 +93,13 @@ class ProjectDetailView(View):
         remaining = project.target - total_donated
         # Fix the similar_projects query
         similar_projects = Project.objects.filter(
-            tags__in=project.tags.all()
-        ).exclude(id=project.id).distinct()[:4]
-
-        if total_donated >= project.target:  # Prevent donations if the target is reached
+        tags__in=project.tags.all()).exclude(id=project.id).distinct()[:4]
+        donation_closed = total_donated >= project.target
+        if donation_closed:  # Prevent donations if the target is reached
             messages.info(request, "Thank you, Donation for this project has been completed.")
-            return redirect('project_detail', project_id=project.id)
+            # return redirect('project_detail', project_id=project.id)
 
-        if 'donate' in request.POST:
+        if 'donate' in request.POST and not donation_closed:
             form = DonationForm(request.POST)
             if form.is_valid():
                 donation_amount = form.cleaned_data['amount']
