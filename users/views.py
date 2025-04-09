@@ -15,6 +15,7 @@ from django.views import View
 from .forms import LoginForm, UserRegistrationForm, UserEditForm, ProfileEditForm
 from .models import Users, Profile
 from .utilis import account_token
+from projects.models import Category  
 
 class UserLoginView(View):
     def get(self, request):
@@ -176,7 +177,8 @@ class EditView(View):
 
 class IndexView(View):
     def get(self, request):
-        return render(request, 'users/home.html')
+        categories = Category.objects.all()  
+        return render(request, 'users/home.html', {'categories': categories})
 
 class CustomPasswordResetView(View):
     def get(self, request):
