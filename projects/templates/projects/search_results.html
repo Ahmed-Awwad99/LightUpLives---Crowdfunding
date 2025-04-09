@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% block title %}Search Results{% endblock %}
+
+{% block content %}
+<h1>Search Results for "{{ query }}"</h1>
+
+{% if projects %}
+    <ul class="list-group mt-4">
+        {% for project in projects %}
+            <li class="list-group-item">
+                <a href="{% url 'project_detail' project.id %}" class="text-success">{{ project.title }}</a>
+            </li>
+        {% endfor %}
+    </ul>
+{% else %}
+    <p class="text-danger mt-4">No projects found matching your search.</p>
+{% endif %}
+{% endblock %}

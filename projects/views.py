@@ -5,7 +5,7 @@ from django.contrib import messages
 from django.db.models import Q
 from decimal import Decimal
 from .forms import ProjectForm, DonationForm, CommentForm, ReportForm, RatingForm
-from .models import Project, ProjectImage, Donation, Comment, Report, Rating,Tag
+from .models import Project, ProjectImage, Donation, Comment, Report, Rating, Tag, Category
 
 
 class CreateProjectView(LoginRequiredMixin, View):
@@ -51,7 +51,8 @@ class ManageProjectsView(LoginRequiredMixin, View):
 
 class ProjectsHomeView(View):
     def get(self, request):
-        return render(request, 'projects/projects_home.html')
+        categories = Category.objects.all()
+        return render(request, 'projects/projects_home.html', {'categories': categories})
 
 
 class ProjectDetailView(View):
@@ -173,5 +174,21 @@ def projects_by_tag(request, tag_name):
     tag = Tag.objects.get(name=tag_name)
     projects = tag.projects.filter(cancelled=False)
     return render(request, 'projects/projects_by_tag.html', {'tag': tag, 'projects': projects})
+
+def projects_by_category(request, category_name):
+    category = Category.objects.get(name=category_name)
+    projects = category.projects.filter(cancelled=False)
+    return render(request, 'projects/projects_by_category.html', {'category': category, 'projects': projects})
+
+
+class SearchProjectsView(View):
+    def get(self, request):
+        query = request.GET.get('q', '')
+        projects = Project.objects.filter(
+            title__icontains=query
+        ).distinct() | Project.objects.filter(
+            tags__name__icontains=query
+        ).distinct()
+        return render(request, 'projects/search_results.html', {'projects': projects, 'query': query})
 
 
