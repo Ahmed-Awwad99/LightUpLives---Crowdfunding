@@ -181,3 +181,14 @@ def projects_by_category(request, category_name):
     return render(request, 'projects/projects_by_category.html', {'category': category, 'projects': projects})
 
 
+class SearchProjectsView(View):
+    def get(self, request):
+        query = request.GET.get('q', '')
+        projects = Project.objects.filter(
+            title__icontains=query
+        ).distinct() | Project.objects.filter(
+            tags__name__icontains=query
+        ).distinct()
+        return render(request, 'projects/search_results.html', {'projects': projects, 'query': query})
+
+

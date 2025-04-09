@@ -13,6 +13,13 @@
             {% endif %}
         </h1>
         <p class="text-gray-600">Start exploring amazing projects from the sidebar ➡️</p>
+
+        <!-- Search Bar -->
+        <form method="GET" action="{% url 'search_projects' %}" class="mt-4">
+            <input type="text" name="q" placeholder="Search projects by title or tag"
+                   class="form-control mb-3" value="{{ request.GET.q }}">
+            <button type="submit" class="btn btn-success">Search</button>
+        </form>
     </div>
 
     <aside class="w-full md:w-64 bg-white rounded-xl shadow-lg p-4 h-96 overflow-y-auto sticky top-10 self-start">

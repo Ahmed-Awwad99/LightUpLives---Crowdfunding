@@ -7,7 +7,8 @@ from .views import (
     ReportProjectView,
     CancelProjectView,
     projects_by_tag,
-    projects_by_category
+    projects_by_category,
+    SearchProjectsView
 )
 
 urlpatterns = [
@@ -19,4 +20,5 @@ urlpatterns = [
     path('<int:project_id>/cancel/', CancelProjectView.as_view(), name='cancel_project'),
     path('tag/<str:tag_name>/', projects_by_tag, name='projects_by_tag'),
     path('category/<str:category_name>/', projects_by_category, name='projects_by_category'),
+    path('search/', SearchProjectsView.as_view(), name='search_projects'),
 ]
