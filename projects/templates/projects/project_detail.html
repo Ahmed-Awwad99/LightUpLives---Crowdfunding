@@ -110,16 +110,54 @@
 </div>
 {% endif %}
 
-<h2 class="mt-5 text-primary">Donations</h2>
-<ul class="list-group mt-3">
+<h2 class="mt-5 text-success">Donations</h2>
+<div class="donations-section mt-3">
   {% for donation in donations %}
-  <li class="list-group-item">
-    <strong>{{ donation.donor.email }}</strong> donated
-    <span class="text-success">{{ donation.amount }} EGP</span> on {{
-    donation.donated_at|date:"d M Y H:i" }}
-  </li>
+  <div class="card mb-3 border-success">
+    <div class="card-body">
+      <div class="d-flex align-items-center justify-content-between">
+        <div>
+          <h5 class="text-success mb-2" style="font-size: 1.25rem;">{{ donation.donor.email }}</h5>
+          <p class="text-muted mb-2">Donated on {{ donation.donated_at|date:"d M Y" }}</p>
+        </div>
+        <h3 class="text-success mb-0" style="font-size: 1.75rem;">{{ donation.amount }} EGP</h3>
+      </div>
+    </div>
+  </div>
+  {% empty %}
+  <div class="card border-success">
+    <div class="card-body">
+      <p class="text-muted mb-0">No donations yet. Be the first to donate!</p>
+    </div>
+  </div>
   {% endfor %}
-</ul>
+</div>
+
+<style>
+.donations-section .card {
+  transition: transform 0.2s;
+}
+
+.donations-section .card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+/* Style for form inputs */
+.card input[type="number"] {
+  width: 100%;
+  padding: 0.5rem;
+  border: 1px solid #ced4da;
+  border-radius: 0.25rem;
+  transition: border-color 0.15s ease-in-out;
+}
+
+.card input[type="number"]:focus {
+  border-color: #198754;
+  outline: none;
+  box-shadow: 0 0 0 0.2rem rgba(25, 135, 84, 0.25);
+}
+</style>
 
 <h2 class="mt-5 text-primary">Comments</h2>
 <div class="comments-section mt-3">
@@ -149,38 +187,73 @@
   {% endfor %}
 </div>
 
-<h2 class="mt-5 text-success">
-  Average Rating: <span>{{ average_rating|floatformat:1 }}</span>
-</h2>
+<div class="card mt-5 border-success" style="max-width: 400px;">
+  <div class="card-body text-center">
+    <h2 class="text-success mb-4" style="font-size: 2rem;">
+      Average Rating: {{ average_rating|floatformat:1 }}
+    </h2>
 
-{% if user.is_authenticated %}
-<div class="rate-project">
-  <h3 class="text-success">Rate this Project</h3>
-  <form method="POST" class="mt-3">
-    {% csrf_token %}
-    <div class="star-rating">
-      <input type="radio" id="star5" name="value" value="5" />
-      <label for="star5" title="5 stars">&#9733;</label>
-      <input type="radio" id="star4" name="value" value="4" />
-      <label for="star4" title="4 stars">&#9733;</label>
-      <input type="radio" id="star3" name="value" value="3" />
-      <label for="star3" title="3 stars">&#9733;</label>
-      <input type="radio" id="star2" name="value" value="2" />
-      <label for="star2" title="2 stars">&#9733;</label>
-      <input type="radio" id="star1" name="value" value="1" />
-      <label for="star1" title="1 star">&#9733;</label>
-    </div>
-    <button type="submit" name="rate" class="btn btn-success mt-3">
-      Submit Rating
-    </button>
-  </form>
+    {% if user.is_authenticated %}
+    <h3 class="text-success mb-4">Rate this Project</h3>
+    <form method="POST">
+      {% csrf_token %}
+      <div class="star-rating mb-4">
+        <input type="radio" id="star5" name="value" value="5" class="d-none" />
+        <label for="star5" title="5 stars" class="star">★</label>
+        <input type="radio" id="star4" name="value" value="4" class="d-none" />
+        <label for="star4" title="4 stars" class="star">★</label>
+        <input type="radio" id="star3" name="value" value="3" class="d-none" />
+        <label for="star3" title="3 stars" class="star">★</label>
+        <input type="radio" id="star2" name="value" value="2" class="d-none" />
+        <label for="star2" title="2 stars" class="star">★</label>
+        <input type="radio" id="star1" name="value" value="1" class="d-none" />
+        <label for="star1" title="1 star" class="star">★</label>
+      </div>
+      <button type="submit" name="rate" class="btn btn-success w-100 py-2" style="font-size: 1.2rem;">
+        Submit Rating
+      </button>
+    </form>
+    {% else %}
+    <p class="mt-3">
+      <a href="{% url 'sign_in' %}" class="text-success">Sign in</a> to rate this project.
+    </p>
+    {% endif %}
+  </div>
 </div>
-{% else %}
-<p class="mt-3">
-  <a href="{% url 'sign_in' %}" class="text-success">Sign in</a> to rate this
-  project.
-</p>
-{% endif %}
+
+<style>
+.star-rating {
+  direction: rtl;
+  display: inline-block;
+  font-size: 2.5rem;
+}
+
+.star-rating input {
+  display: none;
+}
+
+.star-rating label {
+  color: #ccc;
+  cursor: pointer;
+  padding: 0 0.2em;
+  transition: color 0.2s;
+}
+
+.star-rating label:hover,
+.star-rating label:hover ~ label,
+.star-rating input:checked ~ label {
+  color: #ffd700;
+}
+
+.star {
+  display: inline-block;
+  transition: transform 0.2s;
+}
+
+.star:hover {
+  transform: scale(1.2);
+}
+</style>
 
 <div class="add-comment">
   <h3 class="text-success">Add a Comment</h3>

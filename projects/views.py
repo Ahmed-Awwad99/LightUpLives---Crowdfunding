@@ -45,6 +45,7 @@ class ProjectDetailView(View):
         donations = project.donations.all()
         total_donated = sum(donation.amount for donation in donations)
         comments = project.comments.all()
+        categories = Category.objects.all()
         remaining = project.target - total_donated
         similar_projects = Project.objects.filter(
         tags__in=project.tags.all()).exclude(id=project.id).distinct()[:4]
@@ -68,7 +69,8 @@ class ProjectDetailView(View):
             'remaining': remaining,
             'similar_projects': similar_projects,
             'average_rating': project.average_rating(),
-            'donation_closed': donation_closed,  # Pass the flag to the template
+            'donation_closed': donation_closed,
+            'categories': categories,
         })
 
     def post(self, request, project_id):
@@ -175,31 +177,25 @@ class CancelProjectView(LoginRequiredMixin, View):
             messages.error(request, "You cannot cancel this project as donations exceed 25% of the target.")
         return redirect('home')
 
-class ProjectsByTagView(ListView):
-    template_name = 'projects/projects_by_tag.html'
-    context_object_name = 'projects'
-    
-    def get_queryset(self):
-        self.tag = get_object_or_404(Tag, name=self.kwargs['tag_name'])
-        return self.tag.projects.filter(cancelled=False)
-    
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['tag'] = self.tag
-        return context
+class ProjectsByTagView(View):
+    def get(self, request, tag_name):
+        tag = get_object_or_404(Tag, name=tag_name)
+        projects = tag.projects.filter(cancelled=False)
+        return render(request, 'projects/projects_by_tag.html', {
+            'tag': tag, 
+            'projects': projects
+        })
 
-class ProjectsByCategoryView(ListView):
-    template_name = 'projects/projects_by_category.html'
-    context_object_name = 'projects'
-    
-    def get_queryset(self):
-        self.category = get_object_or_404(Category, name=self.kwargs['category_name'])
-        return self.category.projects.filter(cancelled=False)
-    
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['category'] = self.category
-        return context
+class ProjectsByCategoryView(View):
+    def get(self, request, category_name):
+        category = get_object_or_404(Category, name=category_name)
+        categories = Category.objects.all()
+        projects = category.projects.filter(cancelled=False)
+        return render(request, 'projects/projects_by_category.html', {
+            'category': category,
+            'projects': projects,
+            'categories': categories
+        })
 
 class SearchProjectsView(View):
     def get(self, request):
