@@ -1,14 +1,28 @@
 {% extends "base.html" %}
 {% block title %}Projects in "{{ category.name }}"{% endblock %}
 {% block content %}
-<h1>Projects in "{{ category.name }}"</h1>
-<ul>
+<h1>Projects in <strong>{{ category.name }}</strong></h1>
+<div class="row row-cols-1 row-cols-md-3 g-4">
     {% for project in projects %}
-        <li>
-            <a href="{% url 'project_detail' project.id %}">{{ project.title }}</a>
-        </li>
+    <div class="col">
+        <div class="card h-100">
+            <img src="{{ project.images.first.image.url }}" class="card-img-top" alt="{{ project.title }}">
+            <div class="card-body">
+                <h5 class="card-title">{{ project.title }}</h5>
+                <p class="card-text">{{ project.description|truncatechars:100 }}</p>
+                <p class="card-text">
+                    <small class="text-muted">{{ project.created_at|date:"F j, Y" }}</small>
+                </p>
+                <a href="{% url 'project_detail' project.id %}" class="btn btn-primary">View Project</a>
+            </div>
+            <div class="card-footer d-flex justify-content-between">
+                <small class="text-muted">{{ project.funded_amount }} funded</small>
+                <small class="text-muted">{{ project.end_date|date:"F j, Y" }} days left</small>
+            </div>
+        </div>
+    </div>
     {% empty %}
-        <p>No projects found in this category.</p>
+    <p class="text-muted text-center">No projects available.</p>
     {% endfor %}
-</ul>
+</div>
 {% endblock %}
