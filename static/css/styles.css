@@ -341,9 +341,9 @@ body.dark-mode input, body.dark-mode textarea, body.dark-mode select {
 }
 
 .custom-quote span {
-  font-weight: bold;
-  font-size: 3rem; /* Larger size for the emphasized part */
-  color:  #142e22; /* Dark green for emphasis */
+  font-weight: bold !important;
+  font-size: 3rem !important; /* Larger size for the emphasized part */
+  color: #142e22 !important; /* Dark green for emphasis */
 }
 
 /* Circular Image */
