@@ -79,7 +79,7 @@ class UserLoginView(View):
             if user is not None:
                 if user.email_confirmed:
                     login(request, user)
-                    return render('home')
+                    return redirect('home')
                 else:
                     return render(request, 'users/activation_failure.html',{"user": user})
             else:
