@@ -19,24 +19,7 @@ import csv
 from .forms import LoginForm, UserRegistrationForm, UserEditForm, ProfileEditForm
 from .models import Users, Profile
 from .utilis import account_token
-from projects.models import Category, Project, Donation, Report, Comment
-
-class UserLoginView(View):
-    def get(self, request):
-        form = LoginForm()
-        return render(request, 'users/sign_in.html', {"form": form})
-
-    def post(self, request):
-        form = LoginForm(request.POST)
-        if form.is_valid():
-            data = form.cleaned_data
-            user = authenticate(request, email=data['email'], password=data['password'])  # Authenticate using email
-            if user is not None:
-                login(request, user)
-                return render(request, 'users/home.html', {"user": user})
-            else:
-                return render(request, 'users/sign_in.html', {"form": form, "error": "Invalid email or password"})
-        return render(request, 'users/sign_in.html', {"form": form})
+from projects.models import *
 
 #! static method to use it in resend activation email view and register view
 @staticmethod
@@ -85,6 +68,7 @@ class RegisterView(View):
             return redirect('sign_in')  
         #~ If the form is not valid, render the sign-up page with the form errors
         return render(request, 'users/sign_up.html', {"user_form": user_form})
+    
 #! Login view with email authentication
 class UserLoginView(View):
     def get(self, request):
@@ -99,7 +83,7 @@ class UserLoginView(View):
             if user is not None:
                 if user.email_confirmed:
                     login(request, user)
-                    return render(request, 'users/home.html', {"user": user})
+                    return render('home')
                 else:
                     return render(request, 'users/activation_failure.html',{"user": user})
             else:
@@ -179,10 +163,6 @@ class EditView(View):
             profile_form.save()
         return render(request, 'users/edit.html', {'user_form': user_form, 'profile_form': profile_form})
 
-class IndexView(View):
-    def get(self, request):
-        categories = Category.objects.all()  
-        return render(request, 'users/home.html', {'categories': categories})
 
 class CustomPasswordResetView(View):
     def get(self, request):
@@ -291,7 +271,7 @@ class CustomPasswordChangeView(View):
 
 
 def home(request):
-    return render(request, 'users/home.html')
+    return render(request, 'home.html')
 
 def sign_in(request):
     return render(request, 'users/sign_in.html')

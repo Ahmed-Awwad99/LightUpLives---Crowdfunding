@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.views import View
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib import messages
-from django.db.models import Q
+from django.db.models import Q, Sum
 from decimal import Decimal
 from .forms import ProjectForm, DonationForm, CommentForm, ReportForm, RatingForm
 from .models import Project, ProjectImage, Donation, Comment, Report, Rating, Tag, Category
@@ -36,23 +36,6 @@ class CreateProjectView(LoginRequiredMixin, View):
                 ProjectImage.objects.create(project=project, image=image)
             return redirect('home')
         return render(request, 'projects/create_project.html', {'form': form})
-
-
-class ManageProjectsView(LoginRequiredMixin, View):
-    def get(self, request):
-        user_projects = Project.objects.filter(created_by=request.user)
-        all_projects = Project.objects.filter(cancelled=False)
-        return render(request, 'projects/manage_projects.html', {
-            'user_projects': user_projects,
-            'all_projects': all_projects,
-        })
-
-
-
-class ProjectsHomeView(View):
-    def get(self, request):
-        categories = Category.objects.all()
-        return render(request, 'projects/projects_home.html', {'categories': categories})
 
 
 class ProjectDetailView(View):
@@ -168,7 +151,7 @@ class CancelProjectView(LoginRequiredMixin, View):
             messages.success(request, "Project has been successfully canceled.")
         else:
             messages.error(request, "You cannot cancel this project as donations exceed 25% of the target.")
-        return redirect('manage_projects')
+        return redirect('home')
 
 def projects_by_tag(request, tag_name):
     tag = Tag.objects.get(name=tag_name)
@@ -190,5 +173,25 @@ class SearchProjectsView(View):
             tags__name__icontains=query
         ).distinct()
         return render(request, 'projects/search_results.html', {'projects': projects, 'query': query})
+
+# New view for the home page
+class HomeView(View):
+    def get(self, request):
+        categories = Category.objects.all()
+        projects = Project.objects.filter(cancelled=False)
+        all_projects = projects
+        top_rated_projects = sorted(projects, key=lambda p: p.average_rating(), reverse=True)[:5]
+        latest_projects = projects.order_by('-created_at')[:5]
+
+        # Calculate funded amount for each project
+        for project in latest_projects:
+            project.funded_amount = project.donations.aggregate(Sum('amount'))['amount__sum'] or 0
+
+        return render(request, 'home.html', {
+            'categories': categories,
+            'top_rated_projects': top_rated_projects,
+            'latest_projects': latest_projects,
+            'all_projects': all_projects
+        })
 
 
