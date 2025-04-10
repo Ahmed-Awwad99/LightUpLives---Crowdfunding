@@ -4,7 +4,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib import messages
 from django.db.models import Q
 from decimal import Decimal
-from .forms import ProjectForm, DonationForm, CommentForm, ReportForm, RatingForm
+from .forms import ProjectForm, DonationForm, CommentForm, ReportForm, RatingForm, CommentReportForm
 from .models import Project, ProjectImage, Donation, Comment, Report, Rating, Tag, Category
 
 
@@ -92,13 +92,12 @@ class ProjectDetailView(View):
         donations = project.donations.all()
         total_donated = sum(donation.amount for donation in donations)
         remaining = project.target - total_donated
-        # Fix the similar_projects query
         similar_projects = Project.objects.filter(
-        tags__in=project.tags.all()).exclude(id=project.id).distinct()[:4]
+            tags__in=project.tags.all()).exclude(id=project.id).distinct()[:4]
         donation_closed = total_donated >= project.target
-        if donation_closed:  # Prevent donations if the target is reached
+
+        if donation_closed:
             messages.info(request, "Thank you, Donation for this project has been completed.")
-            # return redirect('project_detail', project_id=project.id)
 
         if 'donate' in request.POST and not donation_closed:
             form = DonationForm(request.POST)
@@ -121,6 +120,11 @@ class ProjectDetailView(View):
                 comment.save()
                 return redirect('project_detail', project_id=project.id)
         elif 'rate' in request.POST:
+            # Check if the user has already rated this project
+            if project.ratings.filter(user=request.user).exists():
+                messages.error(request, "You have already rated this project.")
+                return redirect('project_detail', project_id=project.id)
+
             rating_form = RatingForm(request.POST)
             if rating_form.is_valid():
                 rating = rating_form.save(commit=False)
@@ -129,7 +133,24 @@ class ProjectDetailView(View):
                 rating.save()
                 messages.success(request, "Your rating has been submitted.")
                 return redirect('project_detail', project_id=project.id)
-            
+        elif 'report_comment' in request.POST:
+            comment_id = request.POST.get('comment_id')
+            comment = get_object_or_404(Comment, id=comment_id)
+
+            # Check if the user has already reported this comment
+            if comment.reports.filter(user=request.user).exists():
+                messages.error(request, "You have already reported this comment.")
+                return redirect('project_detail', project_id=project.id)
+
+            report_form = CommentReportForm(request.POST)
+            if report_form.is_valid():
+                report = report_form.save(commit=False)
+                report.comment = comment
+                report.user = request.user
+                report.save()
+                messages.success(request, "Your report has been submitted.")
+                return redirect('project_detail', project_id=project.id)
+
         return self.get(request, project_id)
 
 
@@ -190,5 +211,36 @@ class SearchProjectsView(View):
             tags__name__icontains=query
         ).distinct()
         return render(request, 'projects/search_results.html', {'projects': projects, 'query': query})
+
+
+class ReportCommentView(LoginRequiredMixin, View):
+    def get(self, request, comment_id):
+        comment = get_object_or_404(Comment, id=comment_id)
+        form = CommentReportForm()
+        return render(request, 'projects/report_comment.html', {
+            'form': form,
+            'comment': comment,
+        })
+
+    def post(self, request, comment_id):
+        comment = get_object_or_404(Comment, id=comment_id)
+
+        # Check if the user has already reported this comment
+        if comment.reports.filter(user=request.user).exists():
+            messages.error(request, "You have already reported this comment.")
+            return redirect('project_detail', project_id=comment.project.id)
+
+        form = CommentReportForm(request.POST)
+        if form.is_valid():
+            report = form.save(commit=False)
+            report.comment = comment
+            report.user = request.user
+            report.save()
+            messages.success(request, "Your report has been submitted.")
+            return redirect('project_detail', project_id=comment.project.id)
+        return render(request, 'projects/report_comment.html', {
+            'form': form,
+            'comment': comment,
+        })
 
 

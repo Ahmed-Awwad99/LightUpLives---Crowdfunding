@@ -1,30 +1,30 @@
 .navbar-dark.bg-dark {
-    background-color: #004d40 !important; /* Dark green */
+  background-color: #004d40 !important; /* Dark green */
 }
 
 .navbar-brand.text-primary {
-    color: #f8fcfc !important; /* Light green */
+  color: #f8fcfc !important; /* Light green */
 }
 
 .footer-bg {
-    background-color: #004d40 !important; /* Dark green */
+  background-color: #004d40 !important; /* Dark green */
 }
 
 .text-success {
-    color: #2e7d32 !important; /* Green for headings */
+  color: #2e7d32 !important; /* Green for headings */
 }
 
 .btn-success {
-    background-color: #28a745 !important; /* Green for Success */
-    border-color: #28a745 !important;
+  background-color: #28a745 !important; /* Green for Success */
+  border-color: #28a745 !important;
 }
 
 .btn-success:hover {
-    background-color: #1e7e34 !important; /* Darker Green on Hover */
+  background-color: #1e7e34 !important; /* Darker Green on Hover */
 }
 
 .list-group-item {
-    border-color: #004d40 !important; /* Green border for list items */
+  border-color: #004d40 !important; /* Green border for list items */
 }
 
 /* General Theme */
@@ -35,11 +35,17 @@ body {
 }
 
 /* Headers Styling */
-h1, h2, h3, h4, h5, h6 {
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
   color: #28a745 !important;
 }
 
-p, a {
+p,
+a {
   color: #6c757d;
 }
 
@@ -116,7 +122,9 @@ a:hover {
 }
 
 /* Forms */
-input, textarea, select {
+input,
+textarea,
+select {
   border: 1px solid #ced4da;
   border-radius: 8px;
   padding: 0.75rem;
@@ -124,7 +132,9 @@ input, textarea, select {
   transition: border-color 0.2s;
 }
 
-input:focus, textarea:focus, select:focus {
+input:focus,
+textarea:focus,
+select:focus {
   border-color: #28a745;
   outline: none;
 }
@@ -134,7 +144,7 @@ input:focus, textarea:focus, select:focus {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
   gap: 2rem;
-  margin-top: 2rem; 
+  margin-top: 2rem;
 }
 
 .similar-projects .card {
@@ -169,7 +179,9 @@ body.dark-mode .btn {
   background-color: #28a745;
 }
 
-body.dark-mode input, body.dark-mode textarea, body.dark-mode select {
+body.dark-mode input,
+body.dark-mode textarea,
+body.dark-mode select {
   background-color: #495057;
   color: #f8f9fa;
   border-color: #6c757d;
@@ -194,7 +206,7 @@ body.dark-mode input, body.dark-mode textarea, body.dark-mode select {
 }
 
 .add-comment textarea:focus {
-  border-color:  #1e7e34;
+  border-color: #1e7e34;
   outline: none;
 }
 
