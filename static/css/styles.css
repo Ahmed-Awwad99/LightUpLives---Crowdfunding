@@ -334,10 +334,10 @@ body.dark-mode input, body.dark-mode textarea, body.dark-mode select {
 
 /* Custom Quote Styling */
 .custom-quote {
-  font-family: 'Playfair Display', serif;
-  color: #142e22; /* Dark green color for the text */
-  font-size: 2.5rem; /* Size similar to the image */
-  line-height: 1.4;
+  font-family: 'Playfair Display', serif !important;
+  color: #142e22 !important; /* Dark green color for the text */
+  font-size: 2.5rem !important; /* Size similar to the image */
+  line-height: 1.4 !important;
 }
 
 .custom-quote span {

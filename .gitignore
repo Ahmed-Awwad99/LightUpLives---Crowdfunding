@@ -15,10 +15,11 @@ __pycache__
 
 
 
-*.png
-*.jpg
-*.jfif
-*.jpeg
-*.gif
-*.webp
-*.svg
+# *.png
+# *.jpg
+# *.jfif
+# *.jpeg
+# *.gif
+# *.webp
+# *.svg
+# *.JPG
