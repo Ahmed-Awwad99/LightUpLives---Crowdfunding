@@ -3,6 +3,7 @@ from django.conf import settings
 
 class Category(models.Model):
     name = models.CharField(max_length=100, unique=True)
+    description = models.TextField(blank=True, null=True)
 
     def __str__(self):
         return self.name
@@ -24,7 +25,8 @@ class Project(models.Model):
     created_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="projects")
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-    cancelled = models.BooleanField(default=False)  
+    cancelled = models.BooleanField(default=False)
+    is_featured = models.BooleanField(default=False)
 
     def __str__(self):
         return self.title
@@ -56,15 +58,26 @@ class Comment(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="comments")
     content = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
+    is_approved = models.BooleanField(default=False)
+    is_flagged = models.BooleanField(default=False)
 
     def __str__(self):
         return f"Comment by {self.user.email} on {self.project.title}"
 
 class Report(models.Model):
+    REASON_CHOICES = [
+        ('inappropriate', 'Inappropriate Content'),
+        ('fraud', 'Fraudulent Project'),
+        ('duplicate', 'Duplicate Project'),
+        ('other', 'Other Reason')
+    ]
+    
     project = models.ForeignKey(Project, on_delete=models.CASCADE, related_name="reports")
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="reports")
-    reason = models.TextField()
+    reason = models.CharField(max_length=20, choices=REASON_CHOICES, default='other')
+    details = models.TextField(blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
+    dismissed = models.BooleanField(default=False)
 
     def __str__(self):
         return f"Report by {self.user.email} on {self.project.title}"

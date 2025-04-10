@@ -2,20 +2,24 @@ from datetime import timedelta
 from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, update_session_auth_hash
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib.auth.forms import PasswordResetForm, SetPasswordForm, PasswordChangeForm
+from django.contrib.auth.mixins import UserPassesTestMixin
 from django.core.mail import send_mail, EmailMultiAlternatives
-from django.shortcuts import render, redirect
+from django.db.models import Sum, Count
+from django.http import HttpResponse
+from django.shortcuts import render, redirect, get_object_or_404
 from django.template.loader import render_to_string
 from django.utils.encoding import force_bytes, force_str
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.utils.timezone import now
 from django.views import View
+import csv
 
 from .forms import LoginForm, UserRegistrationForm, UserEditForm, ProfileEditForm
 from .models import Users, Profile
 from .utilis import account_token
-from projects.models import Category  
+from projects.models import Category, Project, Donation, Report, Comment
 
 class UserLoginView(View):
     def get(self, request):
@@ -300,4 +304,164 @@ def account(request):
 
 def profile(request):
     return render(request, 'users/profile.html')
+
+# Admin Dashboard Views
+class AdminRequiredMixin(UserPassesTestMixin):
+    def test_func(self):
+        return self.request.user.is_authenticated and self.request.user.is_staff
+
+class AdminDashboardView(AdminRequiredMixin, View):
+    def get(self, request):
+        projects = Project.objects.all().order_by('-created_at')
+        users = Users.objects.filter(is_staff=False).order_by('-date_joined')
+        donations = Donation.objects.all().order_by('-donated_at')
+        project_reports = Report.objects.filter(dismissed=False).order_by('-created_at')
+        comments = Comment.objects.all().order_by('-created_at')
+        categories = Category.objects.all().order_by('name')
+        
+        # Calculate dashboard statistics
+        stats = {
+            'total_users': Users.objects.filter(is_staff=False).count(),
+            'total_projects': Project.objects.count(),
+            'total_donations': Donation.objects.count(),
+            'total_amount': Donation.objects.aggregate(Sum('amount'))['amount__sum'] or 0,
+        }
+        
+        context = {
+            'projects': projects,
+            'users': users,
+            'donations': donations,
+            'project_reports': project_reports,
+            'comments': comments,
+            'categories': categories,
+            'stats': stats,
+        }
+        
+        return render(request, 'users/admin_dashboard.html', context)
+
+class AdminDeleteProjectView(AdminRequiredMixin, View):
+    def post(self, request, project_id):
+        project = get_object_or_404(Project, id=project_id)
+        project_title = project.title
+        project.delete()
+        messages.success(request, f"Project '{project_title}' has been successfully deleted.")
+        return redirect('admin_dashboard')
+
+class AdminDeleteUserView(AdminRequiredMixin, View):
+    def post(self, request, user_id):
+        user = get_object_or_404(Users, id=user_id)
+        user_email = user.email
+        user.delete()
+        messages.success(request, f"User '{user_email}' has been successfully deleted along with all their projects and donations.")
+        return redirect('admin_dashboard')
+
+class AdminToggleFeaturedView(AdminRequiredMixin, View):
+    def post(self, request, project_id):
+        project = get_object_or_404(Project, id=project_id)
+        project.is_featured = not project.is_featured
+        project.save()
+        
+        if project.is_featured:
+            messages.success(request, f"Project '{project.title}' has been featured.")
+        else:
+            messages.success(request, f"Project '{project.title}' has been unfeatured.")
+        
+        return redirect('admin_dashboard')
+
+class AdminDismissReportView(AdminRequiredMixin, View):
+    def post(self, request, report_id):
+        report = get_object_or_404(Report, id=report_id)
+        report.dismissed = True
+        report.save()
+        messages.success(request, f"Report on project '{report.project.title}' has been dismissed.")
+        return redirect('admin_dashboard')
+
+class AdminApproveCommentView(AdminRequiredMixin, View):
+    def post(self, request, comment_id):
+        comment = get_object_or_404(Comment, id=comment_id)
+        comment.is_approved = True
+        comment.is_flagged = False
+        comment.save()
+        messages.success(request, f"Comment on project '{comment.project.title}' has been approved.")
+        return redirect('admin_dashboard')
+
+class AdminDeleteCommentView(AdminRequiredMixin, View):
+    def post(self, request, comment_id):
+        comment = get_object_or_404(Comment, id=comment_id)
+        project_title = comment.project.title
+        comment.delete()
+        messages.success(request, f"Comment on project '{project_title}' has been deleted.")
+        return redirect('admin_dashboard')
+
+class AdminAddCategoryView(AdminRequiredMixin, View):
+    def post(self, request):
+        name = request.POST.get('name', '').strip()
+        description = request.POST.get('description', '').strip()
+        
+        if not name:
+            messages.error(request, "Category name is required.")
+            return redirect('admin_dashboard')
+            
+        # Check if category with this name already exists
+        if Category.objects.filter(name=name).exists():
+            messages.error(request, f"Category '{name}' already exists.")
+            return redirect('admin_dashboard')
+            
+        Category.objects.create(name=name, description=description)
+        messages.success(request, f"Category '{name}' has been created successfully.")
+        return redirect('admin_dashboard')
+
+class AdminEditCategoryView(AdminRequiredMixin, View):
+    def post(self, request, category_id):
+        category = get_object_or_404(Category, id=category_id)
+        name = request.POST.get('name', '').strip()
+        description = request.POST.get('description', '').strip()
+        
+        if not name:
+            messages.error(request, "Category name is required.")
+            return redirect('admin_dashboard')
+            
+        # Check if another category with this name already exists
+        if Category.objects.filter(name=name).exclude(id=category_id).exists():
+            messages.error(request, f"Category '{name}' already exists.")
+            return redirect('admin_dashboard')
+            
+        category.name = name
+        category.description = description
+        category.save()
+        messages.success(request, f"Category '{name}' has been updated successfully.")
+        return redirect('admin_dashboard')
+
+class AdminDeleteCategoryView(AdminRequiredMixin, View):
+    def post(self, request, category_id):
+        category = get_object_or_404(Category, id=category_id)
+        
+        # Check if category has associated projects
+        if category.projects.exists():
+            messages.error(request, f"Cannot delete category '{category.name}' as it has associated projects.")
+            return redirect('admin_dashboard')
+            
+        category_name = category.name
+        category.delete()
+        messages.success(request, f"Category '{category_name}' has been deleted.")
+        return redirect('admin_dashboard')
+
+class AdminExportDonationsView(AdminRequiredMixin, View):
+    def get(self, request):
+        response = HttpResponse(content_type='text/csv')
+        response['Content-Disposition'] = 'attachment; filename="donations.csv"'
+        
+        writer = csv.writer(response)
+        writer.writerow(['Project Title', 'Donor Email', 'Amount', 'Date'])
+        
+        donations = Donation.objects.all().order_by('-donated_at')
+        for donation in donations:
+            writer.writerow([
+                donation.project.title,
+                donation.donor.email,
+                donation.amount,
+                donation.donated_at.strftime('%Y-%m-%d %H:%M:%S')
+            ])
+            
+        return response
 
