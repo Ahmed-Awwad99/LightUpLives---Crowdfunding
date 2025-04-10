@@ -6,6 +6,7 @@ from django.db.models import Q, Sum
 from decimal import Decimal
 from .forms import ProjectForm, DonationForm, CommentForm, ReportForm, RatingForm, CommentReportForm
 from .models import Project, ProjectImage, Donation, Comment, Report, Rating, Tag, Category
+from django.views.generic import ListView
 
 
 class CreateProjectView(LoginRequiredMixin, View):
@@ -174,16 +175,31 @@ class CancelProjectView(LoginRequiredMixin, View):
             messages.error(request, "You cannot cancel this project as donations exceed 25% of the target.")
         return redirect('home')
 
-def projects_by_tag(request, tag_name):
-    tag = Tag.objects.get(name=tag_name)
-    projects = tag.projects.filter(cancelled=False)
-    return render(request, 'projects/projects_by_tag.html', {'tag': tag, 'projects': projects})
+class ProjectsByTagView(ListView):
+    template_name = 'projects/projects_by_tag.html'
+    context_object_name = 'projects'
+    
+    def get_queryset(self):
+        self.tag = get_object_or_404(Tag, name=self.kwargs['tag_name'])
+        return self.tag.projects.filter(cancelled=False)
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['tag'] = self.tag
+        return context
 
-def projects_by_category(request, category_name):
-    category = Category.objects.get(name=category_name)
-    projects = category.projects.filter(cancelled=False)
-    return render(request, 'projects/projects_by_category.html', {'category': category, 'projects': projects})
-
+class ProjectsByCategoryView(ListView):
+    template_name = 'projects/projects_by_category.html'
+    context_object_name = 'projects'
+    
+    def get_queryset(self):
+        self.category = get_object_or_404(Category, name=self.kwargs['category_name'])
+        return self.category.projects.filter(cancelled=False)
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['category'] = self.category
+        return context
 
 class SearchProjectsView(View):
     def get(self, request):
