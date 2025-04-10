@@ -1,7 +1,22 @@
 {% extends "base.html" %}
+{% load static %}
 {% block title %}Home{% endblock %}
 
 {% block content %}
+<!-- Hero Section with Image and Caption -->
+<div class="hero-section mb-5 d-flex align-items-center justify-content-between">
+    <div class="text-start" style="max-width: 50%;">
+        <h2 class="display-4 fw-bold custom-quote">
+            Giving is not about making a donation,<br>
+            it is about making a difference.
+        </h2>
+    </div>
+    <img src="{% static 'images/Simplify Your Business Finances_ Sole Trader Accountant Assistanc.jpeg' %}" 
+         class="rounded-circle" 
+         alt="Donation Hero Image" 
+         style="width: 300px; height: 300px; object-fit: cover;">
+</div>
+
 <div class="container py-5">
     <div class="row align-items-center mb-5">
         <div class="col-md-8">

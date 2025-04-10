@@ -69,7 +69,7 @@
 /* General Theme */
 body {
   font-family: "Inter", "Roboto", sans-serif;
-  background-color: #f8f9fa;
+  background-color: #f8f4e6;
   color: #343a40;
 }
 
@@ -325,4 +325,29 @@ body.dark-mode input, body.dark-mode textarea, body.dark-mode select {
 .star-rating label:hover,
 .star-rating label:hover ~ label {
   color: #ffc107; /* Yellow for selected stars */
+}
+/* Hero Section */
+.hero-section {
+  background-color: #f8f4e6; /* Same cream color for background */
+  padding: 40px;
+}
+
+/* Custom Quote Styling */
+.custom-quote {
+  font-family: 'Playfair Display', serif;
+  color: #142e22; /* Dark green color for the text */
+  font-size: 2.5rem; /* Size similar to the image */
+  line-height: 1.4;
+}
+
+.custom-quote span {
+  font-weight: bold;
+  font-size: 3rem; /* Larger size for the emphasized part */
+  color:  #142e22; /* Dark green for emphasis */
+}
+
+/* Circular Image */
+.hero-section img {
+  border-radius: 50%; /* Circular image */
+  object-fit: cover;
 }
