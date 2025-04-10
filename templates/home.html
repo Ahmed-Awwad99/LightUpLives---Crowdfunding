@@ -66,10 +66,10 @@
                 {% endfor %}
             </div>
             <div class="d-flex justify-content-center mt-3">
-                <button class="btn btn-light me-2" onclick="scrollLeft()">
+                <button class="btn btn-light me-2" onclick="scrollLatestLeft()">
                     <span class="carousel-control-prev-icon"></span>
                 </button>
-                <button class="btn btn-light" onclick="scrollRight()">
+                <button class="btn btn-light" onclick="scrollLatestRight()">
                     <span class="carousel-control-next-icon"></span>
                 </button>
             </div>
@@ -104,15 +104,4 @@
         </div>
     </section>
 </div>
-
-<script>
-    function scrollLeft() {
-        const container = document.getElementById('latestProjectsScroll');
-        container.scrollBy({ left: -300, behavior: 'smooth' });
-    }
-    function scrollRight() {
-        const container = document.getElementById('latestProjectsScroll');
-        container.scrollBy({ left: 300, behavior: 'smooth' });
-    }
-</script>
 {% endblock %}

@@ -14,6 +14,18 @@
     <script src="https://cdn.jsdelivr.net/npm/@yaireo/tagify"></script>
     <!-- Add version query string -->
 </head>
+<script>
+    function scrollLatestLeft() {
+        const container = document.getElementById('latestProjectsScroll');
+        container.scrollBy({ left: -300, behavior: 'smooth' });
+    }
+
+    function scrollLatestRight() {
+        const container = document.getElementById('latestProjectsScroll');
+        container.scrollBy({ left: 300, behavior: 'smooth' });
+    }
+</script>
+
 <body>
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
         <div class="container">
@@ -45,25 +57,25 @@
                     </li>
                     <!-- Right Side: Navigation Links -->
                     <li class="nav-item">
-                        <a class="nav-link text-light" href="{% url 'home' %}">Home</a>
+                        <a class="nav-link" href="{% url 'home' %}">Home</a>
                     </li>
                     {% if user.is_authenticated %}
                         <li class="nav-item">
-                            <a class="nav-link text-light" href="{% url 'edit' %}">Profile</a>
+                            <a class="nav-link" href="{% url 'edit' %}">Profile</a>
                         </li>
                         <li class="nav-item">
                             <form method="post" action="{% url 'sign_out' %}" class="d-inline">
                                 {% csrf_token %}
-                                <button type="submit" class="nav-link border-0 bg-transparent text-light">Sign out</button>
+                                <button type="submit" class="nav-link border-0 bg-transparent">Sign out</button>
                             </form>
                         </li>
                     {% else %}
                         <li class="nav-item">
-                            <a class="nav-link text-light" href="{% url 'sign_in' %}">Sign in</a>
+                            <a class="nav-link" href="{% url 'sign_in' %}">Sign in</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-light" href="{% url 'sign_up' %}">Sign up</a>
-                        </li>
+                            <a class="nav-link" href="{% url 'sign_up' %}">Sign up</a>
+
                     {% endif %}
                 </ul>
             </div>
