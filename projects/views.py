@@ -179,6 +179,7 @@ class HomeView(View):
     def get(self, request):
         categories = Category.objects.all()
         projects = Project.objects.filter(cancelled=False)
+        all_projects = projects
         top_rated_projects = sorted(projects, key=lambda p: p.average_rating(), reverse=True)[:5]
         latest_projects = projects.order_by('-created_at')[:5]
 
@@ -189,7 +190,8 @@ class HomeView(View):
         return render(request, 'home.html', {
             'categories': categories,
             'top_rated_projects': top_rated_projects,
-            'latest_projects': latest_projects
+            'latest_projects': latest_projects,
+            'all_projects': all_projects
         })
 
 
