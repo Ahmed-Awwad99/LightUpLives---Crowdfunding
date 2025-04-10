@@ -8,7 +8,7 @@ __pycache__
 # Ignore environoement variables
 .env
 # Ignore all pycache directories and files
-**/__pycache__/
+__pycache__/
 **/*.pyc
 # Ignore all migration files
 */migrations/0*.py

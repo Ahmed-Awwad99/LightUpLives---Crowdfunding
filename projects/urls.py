@@ -6,7 +6,8 @@ from .views import (
     CancelProjectView,
     projects_by_tag,
     projects_by_category,
-    SearchProjectsView
+    SearchProjectsView,
+    ReportCommentView
 )
 
 urlpatterns = [
@@ -17,4 +18,5 @@ urlpatterns = [
     path('tag/<str:tag_name>/', projects_by_tag, name='projects_by_tag'),
     path('category/<str:category_name>/', projects_by_category, name='projects_by_category'),
     path('search/', SearchProjectsView.as_view(), name='search_projects'),
+    path('comments/<int:comment_id>/report/', ReportCommentView.as_view(), name='report_comment'),
 ]
