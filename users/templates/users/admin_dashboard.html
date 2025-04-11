@@ -2,8 +2,8 @@
 {% block title %}Admin Dashboard{% endblock %}
 
 {% block content %}
-<div class="container mt-4">
-    <h1 class="text-success mb-4">Admin Dashboard</h1>
+<div class="container mt-5">
+    <h1 class="text-success mb-5" style="color: #365E32 !important; font-size: 2.5rem;">Admin Dashboard</h1>
     
     {% if messages %}
     <div class="alert alert-info mb-4">
@@ -14,62 +14,87 @@
     {% endif %}
 
     <!-- Statistics Overview -->
-    <div class="row mb-4">
+    <div class="row g-4 mb-5">
         <div class="col-md-3">
-            <div class="card text-white bg-success">
-                <div class="card-body text-center">
-                    <h5 class="card-title">Total Users</h5>
-                    <h2>{{ stats.total_users }}</h2>
+            <div class="card h-100" style="background-color: #365E32; border: none; border-radius: 15px;">
+                <div class="card-body text-center text-white p-4">
+                    <h5 class="card-title mb-3" style="font-size: 1.5rem;">Total Users</h5>
+                    <h2 class="mb-0" style="font-size: 3rem;">{{ stats.total_users }}</h2>
                 </div>
             </div>
         </div>
         <div class="col-md-3">
-            <div class="card text-white bg-primary">
-                <div class="card-body text-center">
-                    <h5 class="card-title">Total Projects</h5>
-                    <h2>{{ stats.total_projects }}</h2>
+            <div class="card h-100" style="background-color: #81A263; border: none; border-radius: 15px;">
+                <div class="card-body text-center text-white p-4">
+                    <h5 class="card-title mb-3" style="font-size: 1.5rem;">Total Projects</h5>
+                    <h2 class="mb-0" style="font-size: 3rem;">{{ stats.total_projects }}</h2>
                 </div>
             </div>
         </div>
         <div class="col-md-3">
-            <div class="card text-white bg-info">
-                <div class="card-body text-center">
-                    <h5 class="card-title">Total Donations</h5>
-                    <h2>{{ stats.total_donations }}</h2>
+            <div class="card h-100" style="background-color: #E7D37F; border: none; border-radius: 15px;">
+                <div class="card-body text-center text-white p-4">
+                    <h5 class="card-title mb-3" style="font-size: 1.5rem; color: white;">Total Donations</h5>
+                    <h2 class="mb-0" style="font-size: 3rem; color: white;">{{ stats.total_donations }}</h2>
                 </div>
             </div>
         </div>
-        <div class="col-md-3">
-            <div class="card text-white bg-warning">
-                <div class="card-body text-center">
-                    <h5 class="card-title">Funds Raised</h5>
-                    <h2>{{ stats.total_amount }} EGP</h2>
+        <div class="col-md-12">
+            <div class="card h-100" style="background-color: #FD9B63; border: none; border-radius: 15px;">
+                <div class="card-body text-center text-white p-4">
+                    <h5 class="card-title mb-3" style="font-size: 1.5rem;">Funds Raised</h5>
+                    <h2 class="mb-0" style="font-size: 3rem;">{{ stats.total_amount }}.00</h2>
+                    <p class="mb-0" style="font-size: 1.2rem;">EGP</p>
                 </div>
             </div>
         </div>
     </div>
 
     <!-- Nav tabs for different sections -->
-    <ul class="nav nav-tabs mb-4" id="dashboardTabs" role="tablist">
-        <li class="nav-item" role="presentation">
-            <button class="nav-link active" id="projects-tab" data-bs-toggle="tab" data-bs-target="#projects" type="button" role="tab" aria-controls="projects" aria-selected="true">Projects</button>
-        </li>
-        <li class="nav-item" role="presentation">
-            <button class="nav-link" id="users-tab" data-bs-toggle="tab" data-bs-target="#users" type="button" role="tab" aria-controls="users" aria-selected="false">Users</button>
-        </li>
-        <li class="nav-item" role="presentation">
-            <button class="nav-link" id="donations-tab" data-bs-toggle="tab" data-bs-target="#donations" type="button" role="tab" aria-controls="donations" aria-selected="false">Donations</button>
-        </li>
-        <li class="nav-item" role="presentation">
-            <button class="nav-link" id="reports-tab" data-bs-toggle="tab" data-bs-target="#reports" type="button" role="tab" aria-controls="reports" aria-selected="false">Reports</button>
-        </li>
-        <li class="nav-item" role="presentation">
-            <button class="nav-link" id="comments-tab" data-bs-toggle="tab" data-bs-target="#comments" type="button" role="tab" aria-controls="comments" aria-selected="false">Comments</button>
-        </li>
-        <li class="nav-item" role="presentation">
-            <button class="nav-link" id="categories-tab" data-bs-toggle="tab" data-bs-target="#categories" type="button" role="tab" aria-controls="categories" aria-selected="false">Categories</button>
-        </li>
-    </ul>
+    <div class="custom-tabs mb-4">
+        <ul class="nav nav-pills gap-3" id="dashboardTabs" role="tablist">
+            <li class="nav-item" role="presentation">
+                <button class="nav-link custom-tab" id="categories-tab" data-bs-toggle="tab" data-bs-target="#categories" type="button" role="tab" aria-controls="categories" aria-selected="false">Categories</button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link custom-tab" id="projects-tab" data-bs-toggle="tab" data-bs-target="#projects" type="button" role="tab" aria-controls="projects" aria-selected="true">Projects</button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link custom-tab" id="users-tab" data-bs-toggle="tab" data-bs-target="#users" type="button" role="tab" aria-controls="users" aria-selected="false">Users</button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link custom-tab" id="donations-tab" data-bs-toggle="tab" data-bs-target="#donations" type="button" role="tab" aria-controls="donations" aria-selected="false">Donations</button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link custom-tab" id="reports-tab" data-bs-toggle="tab" data-bs-target="#reports" type="button" role="tab" aria-controls="reports" aria-selected="false">Reports</button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link custom-tab" id="comments-tab" data-bs-toggle="tab" data-bs-target="#comments" type="button" role="tab" aria-controls="comments" aria-selected="false">Comments</button>
+            </li>
+        </ul>
+    </div>
+
+    <style>
+        .custom-tabs .nav-pills {
+            border-bottom: none;
+        }
+        .custom-tabs .nav-link {
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            color: #666;
+            font-weight: 500;
+            background-color: #f8f9fa;
+            transition: all 0.3s ease;
+        }
+        .custom-tabs .nav-link:hover {
+            transform: translateY(-2px);
+        }
+        .custom-tabs .nav-link.active {
+            background-color: #365E32 !important;
+            color: white !important;
+        }
+    </style>
     
     <!-- Tab content -->
     <div class="tab-content" id="dashboardTabsContent">

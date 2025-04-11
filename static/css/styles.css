@@ -54,12 +54,13 @@
 }
 
 .btn-success {
-  background-color: #28a745 !important; /* Green for Success */
-  border-color: #28a745 !important;
+  background-color: #77B254 !important; /* New green color */
+  border-color: #77B254 !important;
 }
 
 .btn-success:hover {
-  background-color: #1e7e34 !important; /* Darker Green on Hover */
+  background-color: #639445 !important; /* Darker shade for hover */
+  border-color: #639445 !important;
 }
 
 .list-group-item {
@@ -119,11 +120,11 @@ a:hover {
 
 /* General Button Styling */
 .btn {
-  background-color: #28a745; /* Success Green */
-  color: #fff; /* White Text */
+  background-color: #77B254; /* New green color */
+  color: #fff;
   border: none;
-  border-radius: 6px; /* Rounded Corners */
-  padding: 0.5rem 1.25rem; /* Padding */
+  border-radius: 6px;
+  padding: 0.5rem 1.25rem;
   font-size: 1rem;
   font-weight: 500;
   text-align: center;
@@ -132,8 +133,8 @@ a:hover {
 }
 
 .btn:hover {
-  background-color: #1e7e34; /* Darker Green on Hover */
-  transform: scale(1.05); /* Slight Scale Effect */
+  background-color: #639445; /* Darker shade for hover */
+  transform: scale(1.05);
 }
 
 .btn:active {
@@ -142,21 +143,23 @@ a:hover {
 
 /* Danger Button (For Report a Project) */
 .btn-danger {
-  background-color: #dc3545; /* Red for Danger */
+  background-color: #945034 !important; /* New danger color */
+  border-color: #945034 !important;
 }
 
 .btn-danger:hover {
-  background-color: #a71d2a; /* Darker Red on Hover */
+  background-color: #7A422B !important; /* Darker shade for hover */
+  border-color: #7A422B !important;
 }
 
 .btn-outline-success {
   background-color: transparent;
-  color: #28a745;
-  border: 1px solid #28a745;
+  color: #77B254;
+  border: 1px solid #77B254;
 }
 
 .btn-outline-success:hover {
-  background-color: #28a745;
+  background-color: #77B254;
   color: #fff;
 }
 
@@ -250,7 +253,7 @@ body.dark-mode select {
 }
 
 .add-comment button {
-  background-color: #28a745;
+  background-color: #77B254;
   color: #fff;
   border: none;
   border-radius: 6px;
@@ -262,7 +265,7 @@ body.dark-mode select {
 }
 
 .add-comment button:hover {
-  background-color: #1e7e34;
+  background-color: #639445;
   transform: scale(1.05);
 }
 
@@ -298,7 +301,7 @@ body.dark-mode select {
 }
 
 .rate-project button {
-  background-color: #28a745;
+  background-color: #77B254;
   color: #fff;
   border: none;
   border-radius: 6px;
@@ -311,7 +314,7 @@ body.dark-mode select {
 }
 
 .rate-project button:hover {
-  background-color: #1e7e34;
+  background-color: #639445;
   transform: scale(1.05);
 }
 

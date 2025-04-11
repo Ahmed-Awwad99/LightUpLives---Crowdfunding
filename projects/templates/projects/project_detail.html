@@ -35,9 +35,9 @@
         {% for tag in project.tags.all %}
         <a
           href="{% url 'projects_by_tag' tag.name %}"
-          class="badge bg-primary text-white"
-          >{{ tag.name }}</a
-        >
+          class="badge text-white"
+          style="background-color: #DF6D2D;"
+        >{{ tag.name }}</a>
         {% endfor %}
       </p>
     </div>
@@ -102,11 +102,19 @@
 >
 {% endif %}
 <div class="container mt-5">
-  <h2 class="text-primary">Donate to this project</h2>
-  <form method="POST" class="mt-3">
-    {% csrf_token %} {{ form.as_p }}
-    <button type="submit" name="donate" class="btn btn-success">Donate</button>
-  </form>
+  <div class="card border-success">
+    <div class="card-body text-center">
+      <h2 class="text-success mb-4">Donate to this project</h2>
+      <form method="POST" class="mt-3">
+        {% csrf_token %}
+        <div class="mb-4">
+          <label for="id_amount" class="form-label text-dark fs-5">Donation Amount (EGP):</label>
+          <input type="number" name="amount" id="id_amount" class="form-control form-control-lg text-center" placeholder="Enter donation amount" required>
+        </div>
+        <button type="submit" name="donate" class="btn btn-success btn-lg px-5">Donate</button>
+      </form>
+    </div>
+  </div>
 </div>
 {% endif %}
 
@@ -255,12 +263,27 @@
 }
 </style>
 
-<div class="add-comment">
-  <h3 class="text-success">Add a Comment</h3>
-  <form method="POST" class="mt-3">
-    {% csrf_token %} {{ comment_form.as_p }}
-    <button type="submit" name="comment" class="btn">Post Comment</button>
-  </form>
+<div class="add-comment mt-5">
+  <div class="card border-success">
+    <div class="card-body">
+      <h2 class="text-success mb-4">Add a Comment</h2>
+      <form method="POST" class="mt-3">
+        {% csrf_token %}
+        <div class="mb-3">
+          <label for="id_content" class="form-label text-dark">Content:</label>
+          <textarea 
+            class="form-control" 
+            id="id_content" 
+            name="content" 
+            rows="4" 
+            placeholder="Write your comment here..."
+            style="resize: none; border-radius: 8px;"
+          ></textarea>
+        </div>
+        <button type="submit" name="comment" class="btn btn-success px-4">Post Comment</button>
+      </form>
+    </div>
+  </div>
 </div>
 
 <h2 class="mt-5 text-primary">Similar Projects</h2>
