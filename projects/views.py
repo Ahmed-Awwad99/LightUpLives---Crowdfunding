@@ -215,6 +215,7 @@ class HomeView(View):
         all_projects = projects
         top_rated_projects = sorted(projects, key=lambda p: p.average_rating(), reverse=True)[:5]
         latest_projects = projects.order_by('-created_at')[:5]
+        featured_projects = projects.filter(is_featured=True)[:5]  # Get up to 5 featured projects
 
         # Calculate funded amount for each project
         for project in latest_projects:
@@ -224,7 +225,8 @@ class HomeView(View):
             'categories': categories,
             'top_rated_projects': top_rated_projects,
             'latest_projects': latest_projects,
-            'all_projects': all_projects
+            'all_projects': all_projects,
+            'featured_projects': featured_projects
         })
 
 
