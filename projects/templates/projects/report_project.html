@@ -15,97 +15,39 @@
         });
     </script>
     {% endif %}
-    <h1>Report Project: {{ project.title }}</h1>
-    <form method="POST">
-        {% csrf_token %}
-        {{ form.as_p }} <!-- Ensure this renders the correct fields -->
-        <button type="submit" class="btn btn-danger">Submit Report</button>
-    </form>
-    {% if user == project.created_by %}
-    <h2>Previous Reports</h2>
-    <ul>
-        {% for report in previous_reports %}
-            <li>
-                <strong>{{ report.user.email }}</strong> reported on {{ report.created_at|date:"d M Y H:i" }}:
-                <p>{{ report.reason }}</p>
-            </li>
-        {% empty %}
-            <p>No previous reports for this project.</p>
-        {% endfor %}
-    </ul>
-    {% endif %}
 
-    <h1 class="text-danger mb-4">Report Project</h1>
-
-    <div class="card mb-4">
-        <div class="card-body">
-            <div class="d-flex align-items-center">
-                {% if project.images.first %}
-                <img src="{{ project.images.first.image.url }}" alt="{{ project.title }}" class="rounded" style="width: 100px; height: 100px; object-fit: cover;">
-                {% endif %}
-                <div class="ms-3 flex-grow-1">
-                    <h5 class="card-title mb-1">{{ project.title }}</h5>
-                    <p class="text-muted mb-2">
-                        <small>Created by {{ project.created_by.email }} on {{ project.created_at|date:"d M Y" }}</small>
-                    </p>
-                    <p class="card-text">{{ project.description|truncatechars:150 }}</p>
-                </div>
-            </div>
+    <div class="card shadow-sm mb-4" style="background-color: #f8f9fa; border-radius: 10px;">
+        <div class="card-header bg-danger text-white" style="border-radius: 10px 10px 0 0;">
+            <h1 class="h3 mb-0">Report Project: {{ project.title }}</h1>
         </div>
-    </div>
-
-    <div class="card">
         <div class="card-body">
-            <h5 class="card-title mb-4">Report Details</h5>
-            <form method="POST">
+            <form method="POST" class="mb-4">
                 {% csrf_token %}
-                {{ReportForm.as_p}}
-
                 <div class="mb-3">
-                    <label for="reason" class="form-label">Reason for Reporting:</label>
-                    <select name="reason" id="reason" class="form-select" required>
-                        <option value="">Select a reason</option>
-                        <option value="Inappropriate content">Inappropriate content</option>
-                        <option value="Fraudulent activity">Fraudulent activity</option>
-                        <option value="Spam">Spam</option>
-                        <option value="Other">Other</option>
-                    </select>
+                    {{ form.as_p }}
                 </div>
-
-                <div class="mb-3">
-                    <label for="description" class="form-label">Description:</label>
-                    <textarea name="description" id="description" class="form-control" rows="4" required 
-                              placeholder="Please provide more details about your report..."></textarea>
-                </div>
-
-                <div class="mt-4">
-                    <button type="submit" class="btn btn-danger">Submit Report</button>
-                    <a href="{% url 'project_detail' project.id %}" class="btn btn-secondary ms-2">Cancel</a>
-                </div>
+                <button type="submit" class="btn btn-danger" style="background-color: #a52a2a; border-radius: 5px;">Submit Report</button>
+                <button type="button" class="btn btn-secondary" style="background-color: #8fbc8f; border-radius: 5px;">Cancel</button>
             </form>
         </div>
     </div>
 
-    {% if user == project.created_by and previous_reports %}
-    <div class="card mt-4">
+    {% if user == project.created_by %}
+    <div class="card shadow-sm" style="background-color: #f8f9fa; border-radius: 10px;">
+        <div class="card-header bg-light" style="border-radius: 10px 10px 0 0;">
+            <h2 class="h4 mb-0">Previous Reports</h2>
+        </div>
         <div class="card-body">
-            <h5 class="card-title mb-4">Previous Reports</h5>
             {% for report in previous_reports %}
-            <div class="border-bottom pb-3 mb-3 {% if not forloop.last %}border-bottom{% endif %}">
-                <div class="d-flex align-items-center">
-                    <div class="rounded-circle bg-danger text-white d-flex align-items-center justify-content-center" 
-                         style="width: 40px; height: 40px;">
-                        <span class="fs-4">{{ report.user.email|first|upper }}</span>
+                <div class="border-bottom mb-3 pb-3">
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                        <strong class="text-primary">{{ report.user.email }}</strong>
+                        <small class="text-muted">{{ report.created_at|date:"d M Y H:i" }}</small>
                     </div>
-                    <div class="ms-3">
-                        <div class="fw-bold">{{ report.user.email }}</div>
-                        <small class="text-muted">{{ report.created_at|date:"d M Y" }} at {{ report.created_at|date:"H:i" }}</small>
-                        <p class="mt-2 mb-0">
-                            <span class="badge bg-danger">{{ report.reason }}</span>
-                        </p>
-                    </div>
+                    <p class="mb-0">{{ report.reason }}</p>
                 </div>
-            </div>
+            {% empty %}
+                <p class="text-muted mb-0">No previous reports for this project.</p>
             {% endfor %}
         </div>
     </div>
