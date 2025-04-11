@@ -17,17 +17,22 @@
     {% endif %}
 
     <div class="card shadow-sm mb-4" style="background-color: #f8f9fa; border-radius: 10px;">
-        <div class="card-header bg-danger text-white" style="border-radius: 10px 10px 0 0;">
-            <h1 class="h3 mb-0">Report Project: {{ project.title }}</h1>
+        <div class="card-header text-white" style="background-color: #d9534f; border-radius: 10px 10px 0 0;">
+            <h1 class="h5 mb-0 text-white"><span class="me-2">🚩</span>Report Project: {{ project.title }}</h1>
         </div>
         <div class="card-body">
             <form method="POST" class="mb-4">
                 {% csrf_token %}
                 <div class="mb-3">
-                    {{ form.as_p }}
+                    <label for="reason" class="form-label">Reason:</label>
+                    {{ form.reason }}
                 </div>
-                <button type="submit" class="btn btn-danger" style="background-color: #a52a2a; border-radius: 5px;">Submit Report</button>
-                <button type="button" class="btn btn-secondary" style="background-color: #8fbc8f; border-radius: 5px;">Cancel</button>
+                <div class="mb-3">
+                    <label for="details" class="form-label">Details:</label>
+                    {{ form.details }}
+                </div>
+                <button type="submit" class="btn btn-danger" style="background-color: #d9534f; border-radius: 5px;">Submit Report</button>
+                <button type="button" class="btn btn-secondary" style="border-radius: 5px;">Cancel</button>
             </form>
         </div>
     </div>
