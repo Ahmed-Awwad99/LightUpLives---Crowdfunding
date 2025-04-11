@@ -366,3 +366,13 @@ body.dark-mode select {
   border-radius: 50%; /* Circular image */
   object-fit: cover;
 }
+.card.text-white .card-title,
+.card.text-white h2,
+.card.text-white p,
+.card.text-white h5,
+.card.text-white h3,
+.card.text-white h4,
+.card.text-white span,
+.card.text-white small {
+  color: white !important;
+}
