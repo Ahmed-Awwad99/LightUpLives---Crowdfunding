@@ -11,9 +11,28 @@
 
     <script>
         document.querySelector('.btn-close').addEventListener('click', function () {
-            window.location.href = "{{ redirect_url }}";
+            window.location.href = "{{ redirect_url }}";  
         });
     </script>
+    {% endif %}
+    <h1>Report Project: {{ project.title }}</h1>
+    <form method="POST">
+        {% csrf_token %}
+        {{ form.as_p }} <!-- Ensure this renders the correct fields -->
+        <button type="submit" class="btn btn-danger">Submit Report</button>
+    </form>
+    {% if user == project.created_by %}
+    <h2>Previous Reports</h2>
+    <ul>
+        {% for report in previous_reports %}
+            <li>
+                <strong>{{ report.user.email }}</strong> reported on {{ report.created_at|date:"d M Y H:i" }}:
+                <p>{{ report.reason }}</p>
+            </li>
+        {% empty %}
+            <p>No previous reports for this project.</p>
+        {% endfor %}
+    </ul>
     {% endif %}
 
     <h1 class="text-danger mb-4">Report Project</h1>
