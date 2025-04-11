@@ -50,9 +50,10 @@ class CommentForm(forms.ModelForm):
 class ReportForm(forms.ModelForm):
     class Meta:
         model = Report
-        fields = ['reason']
+        fields = ['reason', 'details']
         widgets = {
-            'reason': forms.Textarea(attrs={'class': 'form-control', 'rows': 3, 'placeholder': 'Explain why you are reporting this project...'}),
+            'reason': forms.Select(attrs={'class': 'form-control'}),
+            'details': forms.Textarea(attrs={'class': 'form-control', 'rows': 3, 'placeholder': 'Provide any additional details...'}),
         }
 
 class RatingForm(forms.ModelForm):

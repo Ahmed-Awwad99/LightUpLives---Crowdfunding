@@ -150,6 +150,7 @@ class ReportProjectView(LoginRequiredMixin, View):
 
     def post(self, request, project_id):
         project = get_object_or_404(Project, id=project_id)
+        print(request.POST)  # Log POST data for debugging
         form = ReportForm(request.POST)
         if form.is_valid():
             report = form.save(commit=False)
@@ -158,6 +159,7 @@ class ReportProjectView(LoginRequiredMixin, View):
             report.save()
             messages.success(request, "Your report has been submitted.")
         else:
+            print(form.errors)  # Log form errors for debugging
             messages.error(request, "There was an error submitting your report.")
         return redirect('project_detail', project_id=project.id)
 

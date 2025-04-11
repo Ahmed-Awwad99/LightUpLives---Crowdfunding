@@ -14,27 +14,11 @@
 </script>
 {% endif %}
 <h1>Report Project: {{ project.title }}</h1>
-<form method="POST" >
+<form method="POST">
     {% csrf_token %}
-    {{ReportForm.as_p}}
-
-    <div class="form-group">
-        <label for="reason">Reason for Reporting:</label>
-        <select name="reason" id="reason" class="form-control" required>
-            <option value="">Select a reason</option>
-            <option value="Inappropriate content">Inappropriate content</option>
-            <option value="Fraudulent activity">Fraudulent activity</option>
-            <option value="Spam">Spam</option>
-            <option value="Other">Other</option>
-        </select>
-    </div>
-    <div class="form-group">
-        <label for="description">Description:</label>
-        <textarea name="description" id="description" class="form-control" rows="4" required></textarea>
-    </div>
-    <div>
-        <button type="submit" class="btn btn-danger">Submit Report</button>
-    </div>
+    {{ form.as_p }} <!-- Ensure this renders the correct fields -->
+    <button type="submit" class="btn btn-danger">Submit Report</button>
+</form>
 {% if user == project.created_by %}
 <h2>Previous Reports</h2>
 <ul>
