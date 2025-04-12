@@ -71,8 +71,14 @@
                             <a class="nav-link" href="{% url 'admin_dashboard' %}">Admin Dashboard</a>
                         </li>
                         {% endif %}
-                        <li class="nav-item">
-                            <a class="nav-link" href="{% url 'edit' %}">Profile</a>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="profileDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                               My Profile
+                            </a>
+                            <ul class="dropdown-menu" aria-labelledby="profileDropdown">
+                                <li><a class="dropdown-item" href="{% url 'profile' %}">View</a></li>
+                                <li><a class="dropdown-item" href="{% url 'edit' %}">Edit</a></li>
+                            </ul>
                         </li>
                         <li class="nav-item">
                             <form method="post" action="{% url 'sign_out' %}" class="d-inline">

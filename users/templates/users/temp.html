@@ -1,0 +1,192 @@
+{% extends "base.html" %}
+
+{% block body %}
+<div class="container my-4">
+    <h2 class="mb-4 text-center">Edit Your Profile</h2>
+    
+    {% if messages %}
+        <div class="messages mb-4">
+            {% for message in messages %}
+                <div class="alert {% if message.tags %}alert-{{ message.tags }}{% endif %} alert-dismissible fade show">
+                    {{ message }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+    
+    <form method="post" enctype="multipart/form-data" class="edit-profile-form">
+        {% csrf_token %}
+        
+        <div class="form-section">
+            <h3><i class="fas fa-envelope"></i> Account Information</h3>
+            <div class="form-group">
+                <label for="email" class="form-label">Email:</label>
+                <input type="email" id="email" class="form-control" value="{{ user.email }}" readonly disabled>
+                <small class="text-muted">Email cannot be changed</small>
+            </div>
+        </div>
+
+        <div class="form-section">
+            <h3><i class="fas fa-user"></i> Personal Information</h3>
+            <div class="form-group">
+                {% for field in user_form %}
+                    {% if field.name in 'first_name,last_name,username' %}
+                        <div class="field-container">
+                            <label for="{{ field.id_for_label }}" class="form-label">{{ field.label }}:</label>
+                            {{ field }}
+                            {% if field.errors %}
+                                <div class="field-error">{{ field.errors }}</div>
+                            {% endif %}
+                        </div>
+                    {% endif %}
+                {% endfor %}
+                <div class="field-container">
+                    <label for="{{ profile_form.profile_picture.id_for_label }}" class="form-label">Profile Picture:</label>
+                    {{ profile_form.profile_picture }}
+                    {% if profile_form.profile_picture.errors %}
+                        <div class="field-error">{{ profile_form.profile_picture.errors }}</div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        <div class="form-section">
+            <h3><i class="fas fa-phone"></i> Contact Information</h3>
+            <div class="form-group">
+            <div class="field-container">
+                <label for="{{ user_form.phone_number.id_for_label }}" class="form-label">Phone Number:</label>
+                {{ user_form.phone_number }}
+                {% if user_form.phone_number.errors %}
+                <div class="field-error">{{ user_form.phone_number.errors }}</div>
+                {% endif %}
+                <small class="text-muted">Enter your phone number with country code</small>
+            </div>
+            </div>
+        </div>
+
+        <div class="form-section">
+            <h3><i class="fas fa-info-circle"></i> Profile Information</h3>
+            <div class="form-group">
+                {% for field in profile_form %}
+                    {% if field.name != 'profile_picture' %}
+                        <div class="field-container">
+                            <label for="{{ field.id_for_label }}" class="form-label">{{ field.label }}:</label>
+                            {{ field }}
+                            {% if field.errors %}
+                                <div class="field-error">{{ field.errors }}</div>
+                            {% endif %}
+                        </div>
+                    {% endif %}
+                {% endfor %}
+            </div>
+        </div>
+
+        <div class="form-section">
+            <h3><i class="fas fa-camera"></i> Profile Picture</h3>
+            <div class="profile-picture-container">
+                {% if user.profile_picture %}
+                    <div class="text-center mb-3">
+                        <label class="form-label">Current Profile Picture:</label>
+                        <div class="image-preview">
+                            <img src="{{ user.profile_picture.url }}" alt="{{ user.username }}'s Profile Picture" class="profile-image">
+                        </div>
+                    </div>
+                {% endif %}
+                
+                <div class="field-container">
+                    <label for="{{ user.profile_picture.id_for_label }}" class="form-label">Change Profile Picture:</label>
+                    {{ user_form.profile_picture }}
+                    <small class="text-muted d-block mt-1">Upload a square image for best results</small>
+                    {% if user_form.profile_picture.errors %}
+                        <div class="field-error">{{ user_form.profile_picture.errors }}</div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        
+
+        <div class="text-center mt-4">
+            <button type="submit" class="btn btn-primary btn-lg px-4">Save Changes</button>
+        </div>
+    </form>
+</div>
+
+<style>
+    .form-section {
+        margin-bottom: 30px;
+        padding: 20px;
+        background-color: #f8f9fa;
+        border-radius: 8px;
+        border-left: 4px solid #3498db;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    }
+    .form-section h3 {
+        margin-top: 0;
+        margin-bottom: 15px;
+        color: #2c3e50;
+        font-weight: 600;
+    }
+    .form-group {
+        margin-bottom: 20px;
+    }
+    .field-container {
+        margin-bottom: 15px;
+    }
+    .field-error {
+        color: #e74c3c;
+        font-size: 0.9em;
+        margin-top: 5px;
+    }
+    .profile-picture-container {
+        margin: 10px 0;
+        padding: 15px;
+        background-color: #ffffff;
+        border-radius: 8px;
+        text-align: center;
+    }
+    .image-preview {
+        margin: 15px auto;
+    }
+    .profile-image {
+        max-width: 220px;
+        max-height: 220px;
+        border-radius: 12px;
+        object-fit: cover;
+        border: 3px solid #2c3e50;
+        box-shadow: 0 8px 15px rgba(0,0,0,0.18);
+        display: block;
+        margin: 0 auto;
+        transition: transform 0.3s ease;
+    }
+    .profile-image:hover {
+        transform: scale(1.08);
+        box-shadow: 0 10px 20px rgba(0,0,0,0.25);
+    }
+    .edit-profile-form input[type="text"],
+    .edit-profile-form input[type="email"],
+    .edit-profile-form select,
+    .edit-profile-form textarea {
+        width: 100%;
+        padding: 8px 12px;
+        border: 1px solid #ced4da;
+        border-radius: 4px;
+        transition: border-color 0.15s ease-in-out;
+    }
+    .edit-profile-form input[type="text"]:focus,
+    .edit-profile-form input[type="email"]:focus,
+    .edit-profile-form select:focus,
+    .edit-profile-form textarea:focus {
+        border-color: #3498db;
+        outline: 0;
+        box-shadow: 0 0 0 0.25rem rgba(52, 152, 219, 0.25);
+    }
+    .btn-primary {
+        background-color: #3498db;
+        border-color: #3498db;
+    }
+    .btn-primary:hover {
+        background-color: #2980b9;
+        border-color: #2980b9;
+    }
+</style>
+{% endblock %}

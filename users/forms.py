@@ -5,6 +5,12 @@ class UserEditForm(forms.ModelForm):
     class Meta:
         model = Users  # Updated to use the custom Users model
         fields = {'first_name', 'last_name',  'phone_number', 'profile_picture'}
+        widgets = {
+            'first_name': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Enter your first name'}),
+            'last_name': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Enter your last name'}),
+            'phone_number': forms.TextInput(attrs={'class': 'form-control', 'placeholder': '01XXXXXXXXX'}),
+            'profile_picture': forms.FileInput(attrs={'class': 'form-control'}),
+        }
 
 
 class ProfileEditForm(forms.ModelForm):
@@ -12,8 +18,9 @@ class ProfileEditForm(forms.ModelForm):
         model = Profile
         fields = {'birthdate', 'facebook_profile', 'country'}
         widgets = {
-            'birthdate': forms.DateInput(attrs={'type': 'date', 'class': 'form-control'}),  # Add a date picker widget
-            'country': forms.Select(attrs={'class': 'form-control'}),  # Add a widget for better styling
+            'birthdate': forms.DateInput(attrs={'type': 'date', 'class': 'form-control'}),
+            'facebook_profile': forms.URLInput(attrs={'class': 'form-control', 'placeholder': 'https://facebook.com/your.profile'}),
+            'country': forms.Select(attrs={'class': 'form-control'}),
         }
 
 
