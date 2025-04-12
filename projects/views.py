@@ -7,6 +7,7 @@ from decimal import Decimal
 from .forms import ProjectForm, DonationForm, CommentForm, ReportForm, RatingForm, CommentReportForm
 from .models import Project, ProjectImage, Donation, Comment, Report, Rating, Tag, Category
 from django.views.generic import ListView
+from django.contrib.auth import logout
 
 
 class CreateProjectView(LoginRequiredMixin, View):
@@ -261,5 +262,9 @@ class ReportCommentView(LoginRequiredMixin, View):
             'form': form,
             'comment': comment,
         })
+
+def custom_logout_view(request):
+    logout(request)
+    return redirect('sign_in')  # Redirect to the sign-in page after logout
 
 

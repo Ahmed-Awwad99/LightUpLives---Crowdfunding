@@ -1,7 +1,7 @@
 from datetime import timedelta
 from django.conf import settings
 from django.contrib import messages
-from django.contrib.auth import authenticate, login, update_session_auth_hash
+from django.contrib.auth import authenticate, login, logout, update_session_auth_hash
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib.auth.forms import PasswordResetForm, SetPasswordForm, PasswordChangeForm
 from django.contrib.auth.mixins import UserPassesTestMixin
@@ -309,6 +309,10 @@ def account(request):
 
 def profile(request):
     return render(request, 'users/profile.html')
+
+def custom_logout_view(request):
+    logout(request)
+    return redirect('sign_in')  # Redirect to the sign-in page after logout
 
 # Admin Dashboard Views
 class AdminRequiredMixin(UserPassesTestMixin):
