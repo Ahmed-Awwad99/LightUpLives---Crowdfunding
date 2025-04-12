@@ -47,19 +47,25 @@
                                 <h5 class="mb-3">Personal Information</h5>
                                 
                                 <div class="mb-3">
-                                    <label for="{{ user_form.first_name.id_for_label }}" class="form-label">First Name</label>
+                                    <label for="{{ user_form.first_name.id_for_label }}" class="form-label">First Name <span class="text-danger">*</span></label>
                                     {{ user_form.first_name.errors }}
                                     <input type="text" class="form-control {% if user_form.first_name.errors %}is-invalid{% endif %}" 
                                            id="{{ user_form.first_name.id_for_label }}" name="{{ user_form.first_name.html_name }}" 
-                                           value="{{ user_form.first_name.value|default:'' }}">
+                                           value="{{ user_form.first_name.value|default:'' }}" required minlength="5"
+                                           oninvalid="this.setCustomValidity('Please enter at least 5 characters for your first name')"
+                                           oninput="this.setCustomValidity('')">
+                                    <div class="form-text">Minimum 5 characters required</div>
                                 </div>
                                 
                                 <div class="mb-3">
-                                    <label for="{{ user_form.last_name.id_for_label }}" class="form-label">Last Name</label>
+                                    <label for="{{ user_form.last_name.id_for_label }}" class="form-label">Last Name <span class="text-danger">*</span></label>
                                     {{ user_form.last_name.errors }}
                                     <input type="text" class="form-control {% if user_form.last_name.errors %}is-invalid{% endif %}" 
                                            id="{{ user_form.last_name.id_for_label }}" name="{{ user_form.last_name.html_name }}" 
-                                           value="{{ user_form.last_name.value|default:'' }}">
+                                           value="{{ user_form.last_name.value|default:'' }}" required minlength="5"
+                                           oninvalid="this.setCustomValidity('Please enter at least 5 characters for your last name')"
+                                           oninput="this.setCustomValidity('')">
+                                    <div class="form-text">Minimum 5 characters required</div>
                                 </div>
                                 
                                 <div class="mb-3">
