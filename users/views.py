@@ -30,7 +30,7 @@ def send_activation_email(request, user):
     domain = request.get_host()
     subject = "Please Activate Your Account"
     message = f"""Please activate your account by visiting: 
-http://{domain}/activate/{urlsafe_base64_encode(force_bytes(user.pk))}/{account_token.make_token(user)}/
+http://{domain}/users/activate/{urlsafe_base64_encode(force_bytes(user.pk))}/{account_token.make_token(user)}/
 
 Note: This activation link will expire in 30 seconds."""
 
@@ -149,45 +149,6 @@ class ResendActivationEmailView(View):
     
 
 #! Edit view for user profile and account settings
-# class EditView(View):
-#     def get(self, request):
-#         user_form = UserEditForm(instance=request.user)
-#         profile_form = ProfileEditForm(instance=request.user.profile)
-#         return render(request, 'users/edit.html', {
-#             'user_form': user_form, 
-#             'profile_form': profile_form,
-#             'user': request.user  # Pass the user object to the template
-#         })
-
-#     def post(self, request):
-#         user_form = UserEditForm(request.POST, instance=request.user)
-#         profile_form = ProfileEditForm(
-#             data=request.POST, 
-#             files=request.FILES,  # Handle file uploads for profile
-#             instance=request.user.profile
-#         )
-#         if user_form.is_valid() and profile_form.is_valid():
-#             user_form.save()
-#             profile_form.save()
-#             messages.success(request, "You have successfully updated your profile")
-#             return render(request, 'users/edit.html', {
-#                 'user_form': user_form, 
-#                 'profile_form': profile_form, 
-#                 'success': True,
-#                 'user': request.user  # Pass the user object to the template
-#             })
-#         else:
-#             # Show form errors message
-#             messages.error(request, "Please correct the errors below.")
-#             # Print form errors for debugging
-#             print(f"User form errors: {user_form.errors}")
-#             print(f"Profile form errors: {profile_form.errors}")
-#         return render(request, 'users/edit.html', {
-#             'user_form': user_form, 
-#             'profile_form': profile_form,
-#             'user': request.user  # Pass the user object to the template
-#         })
-
 class EditView(View):
     def get(self, request):
         user_form = UserEditForm(instance=request.user)

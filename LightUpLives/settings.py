@@ -153,10 +153,6 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 LOGIN_URL = 'sign_in'
 LOGOUT_URL = 'sign_out'
 
-# EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend' # For development purposes, use console backend to print emails to console
-
-#EMAIL_HOST = 'smtp.gmail.com'   ## Use your email provider's SMTP server
-#EMAIL_PORT = 587   ## Use TLS for security
 
 
 ########### Email Verfication ###########

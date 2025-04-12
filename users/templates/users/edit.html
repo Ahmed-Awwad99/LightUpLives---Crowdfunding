@@ -1,4 +1,3 @@
-<!-- filepath: f:\ISTABRAK THINGS\ITI\21_Django\Project\MyProject\LightUpLives\users\templates\users\edit.html -->
 {% extends 'base.html' %}
 {% load static %}
 
@@ -25,20 +24,58 @@
         </div>
         
         <div class="col-lg-8">
+            <!-- Form-wide alerts -->
+            {% if messages %}
+                <div class="alert-container mb-4">
+                    {% for message in messages %}
+                        <div class="alert alert-{{ message.tags }} alert-dismissible fade show mb-2 d-flex align-items-center shadow-sm border-start border-{{ message.tags }} border-4" role="alert">
+                            {% if message.tags == 'success' %}
+                                <i class="fas fa-check-circle me-2 text-success fs-4"></i>
+                            {% elif message.tags == 'error' or message.tags == 'danger' %}
+                                <i class="fas fa-exclamation-circle me-2 text-danger fs-4"></i>
+                            {% elif message.tags == 'warning' %}
+                                <i class="fas fa-exclamation-triangle me-2 text-warning fs-4"></i>
+                            {% elif message.tags == 'info' %}
+                                <i class="fas fa-info-circle me-2 text-info fs-4"></i>
+                            {% endif %}
+                            <div>{{ message }}</div>
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+            
+            <!-- Form errors summary -->
+            {% if user_form.non_field_errors or profile_form.non_field_errors %}
+                <div class="alert alert-danger alert-dismissible fade show mb-4 shadow-sm border-start border-danger border-4" role="alert">
+                    <h5 class="alert-heading d-flex align-items-center">
+                        <i class="fas fa-exclamation-triangle me-2 text-danger fs-4"></i>
+                        Please correct the errors below
+                    </h5>
+                    <hr>
+                    <ul class="mb-0 mt-2 list-unstyled">
+                        {% for error in user_form.non_field_errors %}
+                            <li class="d-flex align-items-center mb-1">
+                                <i class="fas fa-times-circle me-2 text-danger"></i>
+                                {{ error }}
+                            </li>
+                        {% endfor %}
+                        {% for error in profile_form.non_field_errors %}
+                            <li class="d-flex align-items-center mb-1">
+                                <i class="fas fa-times-circle me-2 text-danger"></i>
+                                {{ error }}
+                            </li>
+                        {% endfor %}
+                    </ul>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            {% endif %}
+        
             <div class="card mb-4">
-                <div class="card-header">
+                <div class="card-header bg-light">
                     <h4 class="mb-0">Edit Profile</h4>
                 </div>
                 <div class="card-body">
-                    {% if messages %}
-                        {% for message in messages %}
-                            <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
-                                {{ message }}
-                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                            </div>
-                        {% endfor %}
-                    {% endif %}
-
                     <form method="post" enctype="multipart/form-data">
                         {% csrf_token %}
                         
@@ -48,33 +85,58 @@
                                 
                                 <div class="mb-3">
                                     <label for="{{ user_form.first_name.id_for_label }}" class="form-label">First Name <span class="text-danger">*</span></label>
-                                    {{ user_form.first_name.errors }}
                                     <input type="text" class="form-control {% if user_form.first_name.errors %}is-invalid{% endif %}" 
                                            id="{{ user_form.first_name.id_for_label }}" name="{{ user_form.first_name.html_name }}" 
                                            value="{{ user_form.first_name.value|default:'' }}" required minlength="5"
                                            oninvalid="this.setCustomValidity('Please enter at least 5 characters for your first name')"
                                            oninput="this.setCustomValidity('')">
-                                    <div class="form-text">Minimum 5 characters required</div>
+                                    {% if user_form.first_name.errors %}
+                                        <div class="invalid-feedback d-flex align-items-center">
+                                            <i class="fas fa-exclamation-circle me-1 text-danger"></i>
+                                            {% for error in user_form.first_name.errors %}
+                                                <span>{{ error }}</span>
+                                            {% endfor %}
+                                        </div>
+                                    {% else %}
+                                        <div class="form-text">Minimum 5 characters required</div>
+                                    {% endif %}
                                 </div>
                                 
                                 <div class="mb-3">
                                     <label for="{{ user_form.last_name.id_for_label }}" class="form-label">Last Name <span class="text-danger">*</span></label>
-                                    {{ user_form.last_name.errors }}
                                     <input type="text" class="form-control {% if user_form.last_name.errors %}is-invalid{% endif %}" 
                                            id="{{ user_form.last_name.id_for_label }}" name="{{ user_form.last_name.html_name }}" 
                                            value="{{ user_form.last_name.value|default:'' }}" required minlength="5"
                                            oninvalid="this.setCustomValidity('Please enter at least 5 characters for your last name')"
                                            oninput="this.setCustomValidity('')">
-                                    <div class="form-text">Minimum 5 characters required</div>
+                                    {% if user_form.last_name.errors %}
+                                        <div class="invalid-feedback d-flex align-items-center">
+                                            <i class="fas fa-exclamation-circle me-1 text-danger"></i>
+                                            {% for error in user_form.last_name.errors %}
+                                                <span>{{ error }}</span>
+                                            {% endfor %}
+                                        </div>
+                                    {% else %}
+                                        <div class="form-text">Minimum 5 characters required</div>
+                                    {% endif %}
                                 </div>
                                 
                                 <div class="mb-3">
                                     <label for="{{ user_form.phone_number.id_for_label }}" class="form-label">Phone Number</label>
-                                    {{ user_form.phone_number.errors }}
                                     <input type="text" class="form-control {% if user_form.phone_number.errors %}is-invalid{% endif %}" 
                                            id="{{ user_form.phone_number.id_for_label }}" name="{{ user_form.phone_number.html_name }}" 
-                                           value="{{ user_form.phone_number.value|default:'' }}">
-                                    <div class="form-text">Format: 01XXXXXXXXX (Egyptian numbers only)</div>
+                                           value="{{ user_form.phone_number.value|default:'' }}"
+                                           pattern="01[0-2,5][0-9]{8}">
+                                    {% if user_form.phone_number.errors %}
+                                        <div class="invalid-feedback d-flex align-items-center">
+                                            <i class="fas fa-exclamation-circle me-1 text-danger"></i>
+                                            {% for error in user_form.phone_number.errors %}
+                                                <span>{{ error }}</span>
+                                            {% endfor %}
+                                        </div>
+                                    {% else %}
+                                        <div class="form-text">Format: 01XXXXXXXXX (Egyptian numbers only)</div>
+                                    {% endif %}
                                 </div>
                             </div>
                             
@@ -83,22 +145,51 @@
                                 
                                 <div class="mb-3">
                                     <label for="{{ profile_form.birthdate.id_for_label }}" class="form-label">Birthdate</label>
-                                    {{ profile_form.birthdate.errors }}
-                                    {{ profile_form.birthdate }}
+                                    {% if profile_form.birthdate.errors %}
+                                        <div class="position-relative">
+                                            {{ profile_form.birthdate }}
+                                            <div class="invalid-tooltip d-flex align-items-center">
+                                                <i class="fas fa-exclamation-circle me-1"></i>
+                                                {% for error in profile_form.birthdate.errors %}
+                                                    <span>{{ error }}</span>
+                                                {% endfor %}
+                                            </div>
+                                        </div>
+                                    {% else %}
+                                        {{ profile_form.birthdate }}
+                                    {% endif %}
                                 </div>
                                 
                                 <div class="mb-3">
                                     <label for="{{ profile_form.facebook_profile.id_for_label }}" class="form-label">Facebook Profile</label>
-                                    {{ profile_form.facebook_profile.errors }}
                                     <input type="url" class="form-control {% if profile_form.facebook_profile.errors %}is-invalid{% endif %}" 
                                            id="{{ profile_form.facebook_profile.id_for_label }}" name="{{ profile_form.facebook_profile.html_name }}" 
                                            value="{{ profile_form.facebook_profile.value|default:'' }}" placeholder="https://facebook.com/your.profile">
+                                    {% if profile_form.facebook_profile.errors %}
+                                        <div class="invalid-feedback d-flex align-items-center">
+                                            <i class="fas fa-exclamation-circle me-1 text-danger"></i>
+                                            {% for error in profile_form.facebook_profile.errors %}
+                                                <span>{{ error }}</span>
+                                            {% endfor %}
+                                        </div>
+                                    {% endif %}
                                 </div>
                                 
                                 <div class="mb-3">
                                     <label for="{{ profile_form.country.id_for_label }}" class="form-label">Country</label>
-                                    {{ profile_form.country.errors }}
-                                    {{ profile_form.country }}
+                                    {% if profile_form.country.errors %}
+                                        <div class="position-relative">
+                                            {{ profile_form.country }}
+                                            <div class="invalid-tooltip d-flex align-items-center">
+                                                <i class="fas fa-exclamation-circle me-1"></i>
+                                                {% for error in profile_form.country.errors %}
+                                                    <span>{{ error }}</span>
+                                                {% endfor %}
+                                            </div>
+                                        </div>
+                                    {% else %}
+                                        {{ profile_form.country }}
+                                    {% endif %}
                                 </div>
                             </div>
                         </div>
@@ -107,28 +198,43 @@
                             <h5 class="mb-3">Profile Picture</h5>
                             <div class="mb-3">
                                 <label for="{{ user_form.profile_picture.id_for_label }}" class="form-label">Upload New Picture</label>
-                                {{ user_form.profile_picture.errors }}
                                 <input type="file" class="form-control {% if user_form.profile_picture.errors %}is-invalid{% endif %}" 
-                                       id="{{ user_form.profile_picture.id_for_label }}" name="{{ user_form.profile_picture.html_name }}">
-                                <div class="form-text">Accepted formats: JPG, JPEG, PNG, GIF</div>
+                                       id="{{ user_form.profile_picture.id_for_label }}" name="{{ user_form.profile_picture.html_name }}"
+                                       accept="image/jpeg,image/png,image/gif">
+                                {% if user_form.profile_picture.errors %}
+                                    <div class="invalid-feedback d-flex align-items-center">
+                                        <i class="fas fa-exclamation-circle me-1 text-danger"></i>
+                                        {% for error in user_form.profile_picture.errors %}
+                                            <span>{{ error }}</span>
+                                        {% endfor %}
+                                    </div>
+                                {% else %}
+                                    <div class="form-text">Accepted formats: JPG, JPEG, PNG, GIF (max 5MB)</div>
+                                {% endif %}
                             </div>
                         </div>
                         
                         <div class="d-flex justify-content-end">
-                            <button type="button" class="btn btn-outline-secondary me-2" onclick="window.location.href='{% url 'home' %}'">Cancel</button>
-                            <button type="submit" class="btn btn-primary">Save Changes</button>
+                            <button type="button" class="btn btn-outline-secondary me-2" onclick="window.location.href='{% url 'home' %}'">
+                                <i class="fas fa-times me-1"></i> Cancel
+                            </button>
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-save me-1"></i> Save Changes
+                            </button>
                         </div>
                     </form>
                 </div>
             </div>
             
             <div class="card">
-                <div class="card-header">
+                <div class="card-header bg-light">
                     <h4 class="mb-0">Password Management</h4>
                 </div>
                 <div class="card-body">
                     <p>Need to change your password?</p>
-                    <a href="{% url 'password_change' %}" class="btn btn-outline-primary">Change Password</a>
+                    <a href="{% url 'password_change' %}" class="btn btn-outline-primary">
+                        <i class="fas fa-key me-1"></i> Change Password
+                    </a>
                 </div>
             </div>
         </div>
