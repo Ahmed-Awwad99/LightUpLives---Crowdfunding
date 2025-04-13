@@ -37,6 +37,8 @@ class Project(models.Model):
             return sum(rating.value for rating in ratings) / ratings.count()
         return 0
 
+
+
 class ProjectImage(models.Model):
     project = models.ForeignKey(Project, on_delete=models.CASCADE, related_name="images")
     image = models.ImageField(upload_to="projects/images/")

@@ -39,11 +39,15 @@
                 {% for project in top_rated_projects %}
                 <div class="carousel-item {% if forloop.first %}active{% endif %}">
                     <div class="card" style="border-radius: 12px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);">
-                        <img src="{{ project.images.first.image.url }}" class="d-block w-100" alt="{{ project.title }}" style="height: 400px; object-fit: cover; border-radius: 12px;">
-                        <div class="carousel-caption d-none d-md-block">
-                            <h5>{{ project.title }}</h5>
-                            <p>{{ project.description|truncatechars:100 }}</p>
-                            <a href="{% url 'project_detail' project.id %}" class="btn btn-primary">View Project</a>
+                        <img src="{{ project.images.first.image.url }}" class="d-block w-100" alt="{{ project.title }}" style="height: 400px; object-fit: cover; border-radius: 12px 12px 0 0;">
+                        <div class="card-body" style="height: 250px; overflow: hidden;">
+                            <h5 class="card-title fw-bold text-truncate">{{ project.title }}</h5>
+                            <p class="card-text" style="overflow: hidden; text-overflow: ellipsis; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; white-space: normal;">{{ project.description|truncatechars:100 }}</p>
+                            <div class="d-flex align-items-center mb-3">
+                                <span class="me-2">Rating:</span>
+                                <span class="me-1">{{ project.average_rating|floatformat:1 }}</span>
+                            </div>
+                            <a href="{% url 'project_detail' project.id %}" class="btn btn-success w-100">View Project</a>
                         </div>
                     </div>
                 </div>
