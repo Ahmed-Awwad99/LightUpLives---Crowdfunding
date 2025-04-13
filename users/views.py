@@ -32,7 +32,7 @@ def send_activation_email(request, user):
     message = f"""Please activate your account by visiting: 
 http://{domain}/users/activate/{urlsafe_base64_encode(force_bytes(user.pk))}/{account_token.make_token(user)}/
 
-Note: This activation link will expire in 30 seconds."""
+Note: This activation link will expire in 1 day."""
 
     try:
         send_mail(
@@ -294,18 +294,6 @@ class CustomPasswordChangeView(View):
             'password_changed': False
         })
 
-
-def home(request):
-    return render(request, 'home.html')
-
-def sign_in(request):
-    return render(request, 'users/sign_in.html')
-
-def sign_up(request):
-    return render(request, 'users/sign_up.html' )
-
-def account(request):
-    return render(request, 'users/account.html')
 
 def profile(request):
     return render(request, 'users/profile.html')
