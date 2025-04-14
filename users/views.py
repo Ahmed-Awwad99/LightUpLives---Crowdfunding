@@ -20,6 +20,7 @@ from .forms import LoginForm, UserRegistrationForm, UserEditForm, ProfileEditFor
 from .models import Users, Profile
 from .utilis import account_token
 from projects.models import *
+from django.contrib.auth.mixins import LoginRequiredMixin
 
 #! static method to use it in resend activation email view and register view
 @staticmethod
@@ -458,3 +459,22 @@ class AdminExportDonationsView(AdminRequiredMixin, View):
             
         return response
 
+
+from django.contrib.auth import logout as auth_logout
+
+class DeleteAccountView(LoginRequiredMixin, View):
+    def post(self, request):
+        password = request.POST.get('password')
+        user = request.user
+        
+        # Verify the password
+        if not user.check_password(password):
+            messages.error(request, "Incorrect password. Account deletion canceled.")
+            return redirect('edit')
+        
+        # Log the user out and delete their account
+        auth_logout(request)
+        user.delete()
+        
+        messages.success(request, "Your account has been permanently deleted.")
+        return redirect('home')

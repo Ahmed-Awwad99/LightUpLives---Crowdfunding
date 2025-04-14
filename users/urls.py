@@ -29,6 +29,7 @@ urlpatterns = [# Changed name to "index"
     path('admin/edit-category/<int:category_id>/', AdminEditCategoryView.as_view(), name='admin_edit_category'),
     path('admin/delete-category/<int:category_id>/', AdminDeleteCategoryView.as_view(), name='admin_delete_category'),
     path('admin/export-donations/', AdminExportDonationsView.as_view(), name='admin_export_donations'),
+    path('delete-account/', DeleteAccountView.as_view(), name='delete_account'),
 ]
 # Set the login URL for the login_required decorator
 LOGIN_URL = 'sign_in'
