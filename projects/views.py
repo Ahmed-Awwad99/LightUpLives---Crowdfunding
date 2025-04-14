@@ -26,8 +26,7 @@ from django.views.generic import ListView
 from django.contrib.auth import logout
 from django.contrib.contenttypes.models import ContentType
 
-# Find and delete the duplicate entry
-ContentType.objects.filter(app_label="projects", model="project").delete()
+
 
 
 class CreateProjectView(LoginRequiredMixin, View):
@@ -260,7 +259,6 @@ class SearchProjectsView(View):
         )
 
 
-# New view for the home page
 class HomeView(View):
     def get(self, request):
         categories = Category.objects.all()
