@@ -21,6 +21,8 @@ from .models import Users, Profile
 from .utilis import account_token
 from projects.models import *
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth import logout as auth_logout
+
 
 #! static method to use it in resend activation email view and register view
 @staticmethod
@@ -460,7 +462,6 @@ class AdminExportDonationsView(AdminRequiredMixin, View):
         return response
 
 
-from django.contrib.auth import logout as auth_logout
 
 class DeleteAccountView(LoginRequiredMixin, View):
     def post(self, request):
