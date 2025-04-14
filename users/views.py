@@ -151,12 +151,14 @@ class ResendActivationEmailView(View):
 #! Edit view for user profile and account settings
 class EditView(View):
     def get(self, request):
+        categories = Category.objects.all()
         user_form = UserEditForm(instance=request.user)
         profile_form = ProfileEditForm(instance=request.user.profile)
         return render(request, 'users/edit.html', {
             'user_form': user_form, 
             'profile_form': profile_form,
-            'user': request.user  # Pass the user object to the template
+            'user': request.user,  # Pass the user object to the template
+            'categories': categories  # Pass categories to the template
         })
 
     def post(self, request):
@@ -295,8 +297,7 @@ class CustomPasswordChangeView(View):
         })
 
 
-def home(request):
-    return render(request, 'home.html')
+
 
 def sign_in(request):
     return render(request, 'users/sign_in.html')
@@ -308,7 +309,8 @@ def account(request):
     return render(request, 'users/account.html')
 
 def profile(request):
-    return render(request, 'users/profile.html')
+    categories = Category.objects.all()
+    return render(request, 'users/profile.html',{"categories":categories})
 
 def custom_logout_view(request):
     logout(request)
