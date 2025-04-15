@@ -1,0 +1,231 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Light Up Lives</title>
+    <style>
+      body {
+        background-color: #fdf8ee;
+        margin: 0;
+        padding: 0;
+        font-family: "Arial", sans-serif;
+      }
+      canvas {
+        width: 100%;
+        height: 1200px;
+        border: none;
+        background-color: #fffdf5;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        transition: box-shadow 0.3s ease;
+      }
+      canvas:hover {
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+      }
+    </style>
+  </head>
+  <body>
+    <canvas id="treeCanvas" width="1800" height="1800"></canvas>
+
+    <script>
+      const canvas = document.getElementById("treeCanvas");
+      const ctx = canvas.getContext("2d");
+
+      const background = new Image();
+      background.src = "{% static 'images/growth.png' %}";
+
+      function drawBox(
+        x,
+        y,
+        text,
+        color = "#007bff",
+        radius = 10,
+        fontSize = 30,
+        padding = 30,
+        verticalPadding = 12,
+        bold = false
+      ) {
+        ctx.font = `${bold ? "bold " : ""}${fontSize}px Arial`;
+        const textWidth = ctx.measureText(text).width;
+        const boxWidth = Math.max(250, textWidth + padding * 2);
+        const boxHeight = fontSize + verticalPadding * 2;
+
+        ctx.fillStyle = color;
+        ctx.beginPath();
+        ctx.moveTo(x + radius, y);
+        ctx.lineTo(x + boxWidth - radius, y);
+        ctx.quadraticCurveTo(x + boxWidth, y, x + boxWidth, y + radius);
+        ctx.lineTo(x + boxWidth, y + boxHeight - radius);
+        ctx.quadraticCurveTo(
+          x + boxWidth,
+          y + boxHeight,
+          x + boxWidth - radius,
+          y + boxHeight
+        );
+        ctx.lineTo(x + radius, y + boxHeight);
+        ctx.quadraticCurveTo(x, y + boxHeight, x, y + boxHeight - radius);
+        ctx.lineTo(x, y + radius);
+        ctx.quadraticCurveTo(x, y, x + radius, y);
+        ctx.closePath();
+        ctx.fill();
+
+        ctx.fillStyle = "white";
+        ctx.textAlign = "center";
+        ctx.textBaseline = "middle";
+        ctx.fillText(text, x + boxWidth / 2, y + boxHeight / 2);
+
+        return { width: boxWidth, height: boxHeight };
+      }
+
+      function connect(fromX, fromY, toX, toY) {
+        ctx.strokeStyle = "#d0d0d0";
+        ctx.beginPath();
+        ctx.moveTo(fromX, fromY);
+        ctx.lineTo(toX, toY);
+        ctx.stroke();
+      }
+
+      function drawCanvasContent() {
+        const startX = 675,
+          startY = 40;
+        const { width: mainBoxWidth, height: mainBoxHeight } = drawBox(
+          startX,
+          startY,
+          "Light Up Lives",
+          "#2f5d4c",
+          10,
+          30,
+          30,
+          12,
+          true
+        );
+
+        const sections = [
+          {
+            name: "Authentication System",
+            x: 100,
+            y: 160,
+            color: "#e8a668",
+            subs: [
+              "Register",
+              "First Name",
+              "Last Name",
+              "Email",
+              "Password & Confirm",
+              "Mobile (Egyptian Format)",
+              "Profile Picture",
+              "Activation Email",
+              "Forgot Password",
+            ],
+          },
+          {
+            name: "User Profile",
+            x: 500,
+            y: 160,
+            color: "#e8a668",
+            subs: [
+              "View Profile",
+              "View Projects",
+              "View Donations",
+              "Edit Info (except Email)",
+              "Birthdate",
+              "Facebook Profile",
+              "Country",
+              "Delete Account",
+              "Confirmation Message",
+              "Require Password",
+            ],
+          },
+          {
+            name: "Projects",
+            x: 900,
+            y: 160,
+            color: "#e8a668",
+            subs: [
+              "Create Project",
+              "Donate",
+              "View Project",
+              "Comments",
+              "Report Project",
+              "Report Comment",
+              "Rate Project",
+              "Cancel Project (if < 25%)",
+              "Average Rating",
+              "Picture Slider",
+              
+            ],
+          },
+          {
+            name: "Homepage",
+            x: 1300,
+            y: 160,
+            color: "#e8a668",
+            subs: [
+              "5 Highest Rated Projects",
+              "Latest 5 Projects",
+              "Featured 5 Projects",
+              "Categories List",
+              "Title",
+              "Tags",
+            ],
+          },
+        ];
+
+        sections.forEach((sec) => {
+          const tempBox = drawBox(
+            sec.x,
+            sec.y,
+            sec.name,
+            sec.color,
+            10,
+            24,
+            30,
+            12,
+            true
+          );
+          const boxWidth = tempBox.width;
+          const boxHeight = tempBox.height;
+
+          connect(
+            startX + mainBoxWidth / 2,
+            startY + mainBoxHeight,
+            sec.x + boxWidth / 2,
+            sec.y
+          );
+
+          sec.subs.forEach((sub, j) => {
+            const subY = sec.y + 100 + j * 60;
+            connect(
+              sec.x + boxWidth / 2,
+              sec.y + boxHeight,
+              sec.x + boxWidth / 2,
+              subY
+            );
+          });
+
+          drawBox(sec.x, sec.y, sec.name, sec.color, 10, 24, 30, 12, true);
+
+          sec.subs.forEach((sub, j) => {
+            const subY = sec.y + 100 + j * 60;
+            drawBox(sec.x, subY, sub, "#4d715e", 10, 20, 25, 10, false);
+          });
+        });
+      }
+
+      background.onload = function () {
+        const imgWidth = canvas.width * 0.5;
+        const imgHeight = canvas.height * 0.5;
+        const offsetX = (canvas.width - imgWidth) / 2.4;
+        const offsetY = (canvas.height - imgHeight) /5;
+
+        ctx.globalAlpha = 0.5;
+
+        ctx.drawImage(background, offsetX, offsetY, imgWidth, imgHeight);
+
+        ctx.globalAlpha = 1.0;
+
+        drawCanvasContent();
+      };
+    </script>
+  </body>
+</html>

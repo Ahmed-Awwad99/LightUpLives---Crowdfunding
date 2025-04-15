@@ -1,26 +1,94 @@
-{% extends "base.html" %} {% block title %}Delete Account{% endblock %} {% block
-content %}
+{% extends "base.html" %} {% block title %}Delete Account{% endblock %} 
+{% block content %}
+<style>
+  @keyframes sadAnimation {
+    0% {
+      transform: translateY(0);
+    }
+    50% {
+      transform: translateY(10px);
+    }
+    100% {
+      transform: translateY(0);
+    }
+  }
+
+  .sad-face {
+    font-size: 50px;
+    display: none;
+    animation: sadAnimation 1s infinite;
+    color: rgb(211, 114, 114);
+    text-align: center;
+    margin-top: 20px;
+  }
+</style>
+
+<script>
+  function startDeleteCountdown(event) {
+    event.preventDefault(); // Prevent immediate form submission
+
+    const deleteButton = document.getElementById("delete-button");
+    const cancelButton = document.getElementById("cancel-button");
+    const timerMessage = document.getElementById("timer-message");
+    const sadFace = document.getElementById("sad-face");
+
+    deleteButton.disabled = true;
+    cancelButton.disabled = true;
+    timerMessage.style.display = "block";
+    sadFace.style.display = "block";
+
+    let timeLeft = 5;
+    timerMessage.textContent = `Deleting your account in ${timeLeft} seconds...`;
+
+    const countdown = setInterval(() => {
+      timeLeft -= 1;
+      if (timeLeft > 0) {
+        timerMessage.textContent = `Deleting your account in ${timeLeft} seconds...`;
+      } else {
+        clearInterval(countdown);
+        document.getElementById("delete-form").submit(); // Automatically submit the form
+      }
+    }, 1000);
+  }
+</script>
+
 <div class="container py-5">
   <div class="row justify-content-center">
     <div class="col-md-6">
       <div class="card">
-        <div class="card-header bg-danger text-white">
-          <h4 class="mb-0">Confirm Account Deletion</h4>
+        <div class="card-header bg-dark text-white text-center">
+          <h4 class="mb-0 text-white">Confirm Account Deletion</h4>
         </div>
         <div class="card-body">
           <p class="text-muted">
             Are you sure you want to delete your account? This action cannot be
             undone.
           </p>
-          <form method="post">
+          <form id="delete-form" method="post">
             {% csrf_token %}
             <div class="d-flex justify-content-between">
-              <a href="{% url 'profile' %}" class="btn btn-secondary">Cancel</a>
-              <button type="submit" class="btn btn-danger">
+              <a
+                href="{% url 'profile' %}"
+                id="cancel-button"
+                class="btn btn-secondary"
+                >Cancel</a
+              >
+              <button
+                type="button"
+                id="delete-button"
+                class="btn btn-danger"
+                onclick="startDeleteCountdown(event)"
+              >
                 Delete Account
               </button>
             </div>
           </form>
+          <div
+            id="timer-message"
+            class="text-danger mt-3"
+            style="display: none"
+          ></div>
+          <div id="sad-face" class="sad-face" style="display: none">😢</div>
         </div>
       </div>
     </div>

@@ -27,8 +27,6 @@ from django.contrib.auth import logout
 from django.contrib.contenttypes.models import ContentType
 
 
-
-
 class CreateProjectView(LoginRequiredMixin, View):
     def get(self, request):
         form = ProjectForm()
@@ -333,3 +331,7 @@ class ReportCommentView(LoginRequiredMixin, View):
 def custom_logout_view(request):
     logout(request)
     return redirect("sign_in")  # Redirect to the sign-in page after logout
+
+
+def blueprint(request):
+    return render(request, "projects/blueprint.html")

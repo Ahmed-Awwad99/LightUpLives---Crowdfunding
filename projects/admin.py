@@ -1,9 +1,13 @@
 from django.contrib import admin
+from django.contrib.admin.sites import AlreadyRegistered
 
 from .models import Category, Project, Donation, Comment, Report, Tag, ProjectImage,CommentReport
 
+try:
+    admin.site.register(Category)
+except AlreadyRegistered:
+    pass
 
-admin.site.register(Category)
 admin.site.register(Project)
 admin.site.register(ProjectImage)
 admin.site.register(Donation)

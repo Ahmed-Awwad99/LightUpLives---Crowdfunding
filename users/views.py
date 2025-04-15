@@ -367,7 +367,7 @@ class CustomPasswordChangeView(View):
 
 class DeleteAccountView(View):
     def get(self, request):
-        return render(request, "users/delete_account.html")
+        return render(request, "users/delete_account.html", {"show_button": True})
 
     def post(self, request):
         user = request.user
