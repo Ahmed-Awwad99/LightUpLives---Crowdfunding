@@ -222,7 +222,7 @@ class CancelProjectView(LoginRequiredMixin, View):
                 request,
                 "You cannot cancel this project as donations exceed 25% of the target.",
             )
-        return redirect("home")
+        return redirect("project_detail", project_id=project.id)
 
 
 class ProjectsByTagView(View):
