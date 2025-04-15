@@ -62,9 +62,14 @@ class Comment(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     is_approved = models.BooleanField(default=False)
     is_flagged = models.BooleanField(default=False)
+    parent = models.ForeignKey('self', null=True, blank=True, on_delete=models.CASCADE, related_name='replies')
 
     def __str__(self):
         return f"Comment by {self.user.email} on {self.project.title}"
+
+    @property
+    def is_reply(self):
+        return self.parent is not None
 
 class CommentReport(models.Model):
     comment = models.ForeignKey(Comment, on_delete=models.CASCADE, related_name="reports")
