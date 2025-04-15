@@ -3,7 +3,7 @@ from .views import *
 from django.contrib.auth import views as auth_views
 from .views import custom_logout_view, my_projects, my_donations
 
-urlpatterns = [  # Changed name to "index"
+urlpatterns = [ 
     path("sign_in/", UserLoginView.as_view(), name="sign_in"),
     path("sign_out/", custom_logout_view, name="sign_out"),
     path(
