@@ -1,0 +1,321 @@
+/* Dark Theme Styles */
+body.dark-mode {
+    background-color: #191A19;
+    color: #ffffff !important;
+}
+
+body.dark-mode p,
+body.dark-mode span,
+body.dark-mode div,
+body.dark-mode li {
+    color: #ffffff !important;
+}
+
+body.dark-mode .navbar {
+    background-color: #191A19 !important;
+    border-bottom: 1px solid #4E9F3D;
+}
+
+body.dark-mode .navbar-brand,
+body.dark-mode .nav-link {
+    color: #ffffff !important;
+}
+
+body.dark-mode .card {
+    background-color: #191A19;
+    border-color: #4E9F3D;
+}
+
+body.dark-mode .card-body,
+body.dark-mode .card-footer {
+    background-color: #191A19;
+    color: #ffffff !important;
+}
+
+body.dark-mode .card-title,
+body.dark-mode .card-text {
+    color: #ffffff !important;
+}
+
+body.dark-mode .text-muted {
+    color: #aaaaaa !important;
+}
+
+body.dark-mode .text-primary {
+    color: #4E9F3D !important;
+}
+
+body.dark-mode .text-success {
+    color: #4E9F3D !important;
+}
+
+body.dark-mode .btn {
+    color: #ffffff !important;
+}
+
+body.dark-mode .btn-success,
+body.dark-mode .btn-primary {
+    background-color: #4E9F3D;
+    border-color: #4E9F3D;
+    color: #ffffff !important;
+}
+
+body.dark-mode .btn-success:hover,
+body.dark-mode .btn-primary:hover {
+    background-color: #3d7c2f;
+    border-color: #3d7c2f;
+    color: #ffffff !important;
+}
+
+body.dark-mode .btn-outline-success,
+body.dark-mode .btn-outline-primary {
+    color: #ffffff !important;
+    border-color: #4E9F3D;
+    background-color: transparent;
+}
+
+body.dark-mode .btn-outline-success:hover,
+body.dark-mode .btn-outline-primary:hover {
+    color: #ffffff !important;
+    background-color: #4E9F3D;
+    border-color: #4E9F3D;
+}
+
+body.dark-mode .btn-danger {
+    background-color: #f44336;
+    border-color: #f44336;
+}
+
+body.dark-mode .btn-secondary {
+    background-color: #757575;
+    border-color: #757575;
+}
+
+body.dark-mode .btn-outline-light {
+    color: #ffffff;
+    border-color: #ffffff;
+}
+
+body.dark-mode .btn-outline-light:hover {
+    background-color: #ffffff;
+    color: #191A19;
+}
+
+body.dark-mode .alert {
+    background-color: #191A19;
+    border-color: #4E9F3D;
+}
+
+body.dark-mode .alert-success {
+    background-color: #1b5e20;
+    border-color: #4E9F3D;
+    color: #ffffff;
+}
+
+body.dark-mode .alert-danger {
+    background-color: #b71c1c;
+    border-color: #c62828;
+    color: #ffffff;
+}
+
+body.dark-mode .alert-info {
+    background-color: #0d47a1;
+    border-color: #1565c0;
+    color: #ffffff;
+}
+
+body.dark-mode .form-control {
+    background-color: #191A19;
+    border-color: #4E9F3D;
+    color: #ffffff;
+}
+
+body.dark-mode .form-control:focus {
+    background-color: #191A19;
+    border-color: #4E9F3D;
+    color: #ffffff;
+}
+
+body.dark-mode .form-label {
+    color: #ffffff;
+}
+
+body.dark-mode .dropdown-menu {
+    background-color: #191A19;
+    border-color: #4E9F3D;
+}
+
+body.dark-mode .dropdown-item {
+    color: #ffffff;
+}
+
+body.dark-mode .dropdown-item:hover {
+    background-color: #2d2d2d;
+    color: #4E9F3D;
+}
+
+body.dark-mode .table {
+    color: #ffffff;
+}
+
+body.dark-mode .table-striped tbody tr:nth-of-type(odd) {
+    background-color: #2d2d2d;
+}
+
+body.dark-mode .table-hover tbody tr:hover {
+    background-color: #333;
+}
+
+body.dark-mode .modal-content {
+    background-color: #191A19;
+    border-color: #4E9F3D;
+}
+
+body.dark-mode .modal-header,
+body.dark-mode .modal-footer {
+    border-color: #4E9F3D;
+}
+
+body.dark-mode .modal-title {
+    color: #ffffff;
+}
+
+body.dark-mode .progress {
+    background-color: #333;
+}
+
+body.dark-mode .footer-bg {
+    background-color: #191A19;
+    border-top: 1px solid #4E9F3D;
+}
+
+/* Dark mode toggle button */
+.dark-mode-toggle {
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    margin-right: 15px;
+}
+
+.dark-mode-toggle i {
+    font-size: 1.2rem;
+    color: #4E9F3D;
+}
+
+body.dark-mode .dark-mode-toggle i {
+    color: #4E9F3D;
+}
+
+/* Links */
+body.dark-mode a {
+    color: #4E9F3D;
+}
+
+body.dark-mode a:hover {
+    color: #3d7c2f;
+}
+
+/* Headings */
+body.dark-mode h1, 
+body.dark-mode h2, 
+body.dark-mode h3, 
+body.dark-mode h4, 
+body.dark-mode h5, 
+body.dark-mode h6 {
+    color: #4E9F3D;
+}
+
+/* Borders */
+body.dark-mode .border {
+    border-color: #4E9F3D !important;
+}
+
+body.dark-mode .border-top {
+    border-top-color: #4E9F3D !important;
+}
+
+body.dark-mode .border-bottom {
+    border-bottom-color: #4E9F3D !important;
+}
+
+body.dark-mode .border-start {
+    border-left-color: #4E9F3D !important;
+}
+
+body.dark-mode .border-end {
+    border-right-color: #4E9F3D !important;
+}
+
+/* Project Details Page Specific Styles */
+body.dark-mode .project-details {
+    background-color: #191A19;
+    color: #ffffff !important;
+}
+
+body.dark-mode .project-details h1,
+body.dark-mode .project-details h2,
+body.dark-mode .project-details h3,
+body.dark-mode .project-details h4,
+body.dark-mode .project-details h5,
+body.dark-mode .project-details h6 {
+    color: #4E9F3D;
+}
+
+body.dark-mode .project-details p,
+body.dark-mode .project-details li,
+body.dark-mode .project-details span,
+body.dark-mode .project-details div {
+    color: #ffffff !important;
+}
+
+body.dark-mode .project-details .card {
+    background-color: #191A19;
+    border-color: #4E9F3D;
+}
+
+body.dark-mode .project-details .card-body {
+    background-color: #191A19;
+    color: #ffffff;
+}
+
+body.dark-mode .project-details .card-title,
+body.dark-mode .project-details .card-text {
+    color: #ffffff !important;
+}
+
+body.dark-mode .project-details .text-muted {
+    color: #aaaaaa !important;
+}
+
+/* Donation Card Styles */
+body.dark-mode .donate-card {
+    background-color: #191A19;
+    color: #ffffff !important;
+}
+
+body.dark-mode .donate-card h1,
+body.dark-mode .donate-card h2,
+body.dark-mode .donate-card h3 {
+    color: #ffffff !important;
+}
+
+body.dark-mode .donate-card label,
+body.dark-mode .donate-card p,
+body.dark-mode .donate-card span,
+body.dark-mode .donate-card div {
+    color: #ffffff !important;
+}
+
+body.dark-mode .donate-card .form-label {
+    color: #ffffff !important;
+}
+
+body.dark-mode .donate-card input::placeholder {
+    color: rgba(255, 255, 255, 0.7) !important;
+}
+
+/* Override any green headings in donation section */
+body.dark-mode .donate-card .text-success,
+body.dark-mode .donate-card .text-primary {
+    color: #ffffff !important;
+} 

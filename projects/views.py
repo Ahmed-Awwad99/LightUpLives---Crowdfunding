@@ -141,6 +141,18 @@ class ProjectDetailView(View):
                 comment.user = request.user
                 comment.save()
                 return redirect("project_detail", project_id=project.id)
+        elif "reply" in request.POST:
+            parent_id = request.POST.get('parent_id')
+            content = request.POST.get('content')
+            if parent_id and content:
+                parent_comment = get_object_or_404(Comment, id=parent_id)
+                reply = Comment.objects.create(
+                    project=project,
+                    user=request.user,
+                    content=content,
+                    parent=parent_comment
+                )
+                return redirect("project_detail", project_id=project.id)
         elif "rate" in request.POST:
             # Check if the user has already rated this project
             if project.ratings.filter(user=request.user).exists():
