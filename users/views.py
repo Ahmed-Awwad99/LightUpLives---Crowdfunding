@@ -15,18 +15,12 @@ from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.utils.timezone import now
 from django.views import View
 import csv
-
-
-
-
 from .forms import LoginForm, UserRegistrationForm, UserEditForm, ProfileEditForm
 from .models import Users, Profile
 from .utilis import account_token
 from projects.models import *
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth import logout as auth_logout
-
-
 
 
 @login_required
@@ -226,7 +220,7 @@ class CustomPasswordResetView(View):
                 # Use account_token from utilis like the activation view
                 subject = "Password Reset Request"
                 # Modify the URL to match your URL pattern for password reset confirmation
-                reset_url = f"http://localhost:8000/reset/{urlsafe_base64_encode(force_bytes(user.pk))}/{account_token.make_token(user)}/"
+                reset_url = f"http://localhost:8000/users/reset/{urlsafe_base64_encode(force_bytes(user.pk))}/{account_token.make_token(user)}/"
                 message = f"Please reset your password by clicking: {reset_url}"
                 html_message = f"""
                 <html>

@@ -25,6 +25,9 @@ from .models import (
 from django.views.generic import ListView
 from django.contrib.auth import logout
 from django.contrib.contenttypes.models import ContentType
+from django.utils.decorators import method_decorator
+from django.contrib.auth.decorators import login_required
+from django.conf import settings
 
 # Find and delete the duplicate entry
 ContentType.objects.filter(app_label="projects", model="project").delete()
@@ -102,6 +105,7 @@ class ProjectDetailView(View):
             },
         )
 
+    @method_decorator(login_required)
     def post(self, request, project_id):
         project = get_object_or_404(Project, id=project_id)
         donations = project.donations.all()
