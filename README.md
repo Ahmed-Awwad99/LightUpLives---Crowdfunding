@@ -4,6 +4,7 @@
 LightUpLives is a web-based crowdfunding platform that enables individuals and organizations to raise funds for projects, causes, and ventures in Egypt. The platform connects fundraisers with donors, providing a secure and user-friendly environment to support initiatives that make a difference.
 
 ## Features
+
 ### 1. Authentication System
 - **User Registration:**
   - First name, Last name, Email, Password, Confirm Password
@@ -12,43 +13,64 @@ LightUpLives is a web-based crowdfunding platform that enables individuals and o
   - Email activation (users must activate their accounts via email within 24 hours before they can log in)
 - **Login System:**
   - Login via email and password (after activation)
-  - Bonus: Login via Facebook
+  - Login via Facebook
 - **Password Management:**
-  - Bonus: Forgot password functionality with email reset link
+  - Forgot password functionality with email reset link
+  - Password change within profile settings
 - **User Profile:**
   - View profile, projects, and donations
   - Edit personal data (except email)
   - Add optional information (Birthdate, Facebook profile, Country)
-  - Delete account with confirmation (Bonus: Require password for deletion)
+  - Delete account with confirmation and password verification
 
 ### 2. Projects Management
-- Users can create and manage fundraising campaigns with:
+- **Project Creation:**
   - Title, Details, Category (admin-defined), Multiple images
   - Funding goal (e.g., 250,000 EGP), Tags, Start/End time
-- Users can:
+- **User Interactions:**
   - View and donate to projects
-  - Comment on projects (Bonus: Comment replies)
+  - Comment on projects with reply functionality
   - Report inappropriate projects or comments
-  - Rate projects
-- Project page includes:
+  - Rate projects using a 5-star rating system
+- **Project Page Features:**
   - Overall project rating
   - Image slider for project pictures
   - Related projects based on tags
-- Project creator can cancel the project if donations are below 25% of the target
+  - Progress bar showing funding percentage
+  - Comment section with nested replies
+- **Project Control:**
+  - Project creator can cancel the project if donations are below 25% of the target
 
 ### 3. Homepage
-- Slider showcasing the top 5 highest-rated active projects
-- List of latest 5 projects
-- List of 5 featured projects (selected by admin)
-- Category-based project browsing
-- Search bar for searching projects by title or tag
+- **Project Showcases:**
+  - Latest projects with horizontal scrolling
+  - Featured projects (admin-selected)
+  - Category-based project browsing
+- **UI Features:**
+  - Dark mode support
+  - Responsive design for all device sizes
+  - Interactive UI elements
+- **Search Functionality:**
+  - Search projects by title or tag
+
+### 4. Admin Features
+- **Content Moderation:**
+  - Manage user-reported content
+  - Approve or delete reported comments
+  - Review and handle project reports
+- **Featured Content:**
+  - Select projects to be featured on the homepage
+- **Category Management:**
+  - Create and manage project categories
 
 ## Technologies Used
 - **Backend:** Django (Python)
-- **Frontend:** HTML, CSS, Bootstrap, JavaScript
+- **Frontend:** HTML, CSS, Bootstrap 5, JavaScript
 - **Database:** PostgreSQL
 - **Authentication:** Django Authentication, OAuth (for Facebook login)
 - **Email Service:** Django Email backend (for email verification and password resets)
+- **UI Enhancements:** Font Awesome icons, Custom CSS animations
+- **Form Handling:** Django Forms with client-side validation
 
 ## Installation
 To set up the project locally:
@@ -81,10 +103,11 @@ To set up the project locally:
    ```
 
 ## Usage
-- Users can register, activate their accounts, and log in.
-- Users can create, view, and donate to projects.
-- Users can interact via comments, reports, and ratings.
-- Admins can manage categories and featured projects.
+- Users can register, activate their accounts, and log in
+- Users can create, view, and donate to projects
+- Users can interact via comments, replies, reports, and ratings
+- Users can switch between light and dark modes
+- Admins can manage categories, featured projects, and reported content
 
 ## Contribution
 We welcome contributions! To contribute:
@@ -103,14 +126,17 @@ We welcome contributions! To contribute:
 ## License
 This project is open-source and licensed under the MIT License.
 
-## Roadmap
-- [ ] Develop project creation and management functionality
-- [ ] Implement core authentication system
-- [ ] Set up donation transactions
-- [ ] Build project commenting and reporting system
-- [ ] Admin panel for managing categories and featured projects
-- [ ] Implement bonus features like Facebook login and comment replies
+## Completed Features
+- [x] Develop project creation and management functionality
+- [x] Implement core authentication system
+- [x] Set up donation transactions
+- [x] Build project commenting and reporting system
+- [x] Implement comment reply functionality
+- [x] Create admin panel for managing categories and featured projects
+- [x] Implement dark mode toggle
+- [x] Add star rating system for projects
+- [x] Implement account deletion functionality
+- [ ] Add login with Facebook integration
 
 ---
-### Notes
-This README will be updated as we progress with the development of the project. Stay tuned!
+© 2025 Light Up Lives. All rights reserved.
