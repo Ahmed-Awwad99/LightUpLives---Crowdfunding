@@ -33,7 +33,8 @@ ContentType.objects.filter(app_label="projects", model="project").delete()
 class CreateProjectView(LoginRequiredMixin, View):
     def get(self, request):
         form = ProjectForm()
-        return render(request, "projects/create_project.html", {"form": form})
+        categoties = Category.objects.all()
+        return render(request, "projects/create_project.html", {"form": form,'categories': categoties})
 
     def post(self, request):
         form = ProjectForm(request.POST, request.FILES)
@@ -192,6 +193,8 @@ class ReportProjectView(LoginRequiredMixin, View):
     def get(self, request, project_id):
         project = get_object_or_404(Project, id=project_id)
         form = ReportForm()
+        categoties = Category.objects.all()
+
         previous_reports = (
             project.reports.all() if request.user == project.created_by else None
         )
@@ -202,6 +205,7 @@ class ReportProjectView(LoginRequiredMixin, View):
                 "form": form,
                 "project": project,
                 "previous_reports": previous_reports,
+                "categories": categoties,
             },
         )
 
@@ -222,8 +226,13 @@ class ReportProjectView(LoginRequiredMixin, View):
 
 
 class CancelProjectView(LoginRequiredMixin, View):
+    def get(self, request, project_id):
+        project = get_object_or_404(Project, id=project_id, created_by=request.user)
+        categoties = Category.objects.all()
+        return render(request, "projects/cancel_project.html", {"project": project, "categories": categoties})
     def post(self, request, project_id):
         project = get_object_or_404(Project, id=project_id, created_by=request.user)
+        
         total_donated = sum(donation.amount for donation in project.donations.all())
         if total_donated < (Decimal("0.25") * project.target):
             project.cancelled = True
@@ -241,8 +250,10 @@ class ProjectsByTagView(View):
     def get(self, request, tag_name):
         tag = get_object_or_404(Tag, name=tag_name)
         projects = tag.projects.filter(cancelled=False)
+        categoties = Category.objects.all()
+
         return render(
-            request, "projects/projects_by_tag.html", {"tag": tag, "projects": projects}
+            request, "projects/projects_by_tag.html", {"tag": tag, "projects": projects, "categories": categoties}
         )
 
 
@@ -261,6 +272,8 @@ class ProjectsByCategoryView(View):
 class SearchProjectsView(View):
     def get(self, request):
         query = request.GET.get("q", "")
+        categoties = Category.objects.all()
+
         projects = (
             Project.objects.filter(title__icontains=query).distinct()
             | Project.objects.filter(tags__name__icontains=query).distinct()
@@ -268,7 +281,7 @@ class SearchProjectsView(View):
         return render(
             request,
             "projects/search_results.html",
-            {"projects": projects, "query": query},
+            {"projects": projects, "query": query, "categories": categoties},
         )
 
 
@@ -309,12 +322,15 @@ class ReportCommentView(LoginRequiredMixin, View):
     def get(self, request, comment_id):
         comment = get_object_or_404(Comment, id=comment_id)
         form = CommentReportForm()
+        categoties = Category.objects.all()
+
         return render(
             request,
             "projects/report_comment.html",
             {
                 "form": form,
                 "comment": comment,
+                "categories": categoties,
             },
         )
 
