@@ -47,6 +47,14 @@ class CommentForm(forms.ModelForm):
             'content': forms.Textarea(attrs={'class': 'form-control', 'rows': 3, 'placeholder': 'Write your comment here...'}),
         }
 
+class ReplyForm(forms.ModelForm):
+    class Meta:
+        model = Comment
+        fields = ['content']
+        widgets = {
+            'content': forms.Textarea(attrs={'class': 'form-control', 'rows': 2, 'placeholder': 'Write your reply here...'}),
+        }
+
 class ReportForm(forms.ModelForm):
     class Meta:
         model = Report
