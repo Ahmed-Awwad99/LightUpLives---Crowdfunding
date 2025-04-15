@@ -347,3 +347,14 @@ class ReportCommentView(LoginRequiredMixin, View):
 def custom_logout_view(request):
     logout(request)
     return redirect("sign_in")  # Redirect to the sign-in page after logout
+
+
+
+
+
+
+
+
+
+
+

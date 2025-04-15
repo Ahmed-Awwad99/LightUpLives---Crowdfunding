@@ -83,6 +83,7 @@ urlpatterns = [  # Changed name to "index"
     ),
     path("my-projects/", my_projects, name="my_projects"),
     path("my-donations/", my_donations, name="my_donations"),
+    path("delete-account/", DeleteAccountView.as_view(), name="delete_account"),
 ]
 # Set the login URL for the login_required decorator
 LOGIN_URL = "sign_in"

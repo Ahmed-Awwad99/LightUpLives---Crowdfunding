@@ -16,10 +16,18 @@ from django.utils.timezone import now
 from django.views import View
 import csv
 
+
+
+
 from .forms import LoginForm, UserRegistrationForm, UserEditForm, ProfileEditForm
 from .models import Users, Profile
 from .utilis import account_token
 from projects.models import *
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth import logout as auth_logout
+
+
+
 
 @login_required
 def my_projects(request):
@@ -80,7 +88,7 @@ class RegisterView(View):
             return redirect('sign_in')  
         #~ If the form is not valid, render the sign-up page with the form errors
         return render(request, 'users/sign_up.html', {"user_form": user_form})
-    
+
 #! Login view with email authentication
 class UserLoginView(View):
     def get(self, request):
@@ -101,7 +109,7 @@ class UserLoginView(View):
             else:
                 return render(request, 'users/sign_in.html', {"form": form, "error": "Invalid email or password"})
         return render(request, 'users/sign_in.html', {"form": form})
-    
+
 #! The second part of the email verdfication process in register view
 
 class ActivateAccountView(View):
@@ -127,7 +135,6 @@ class ActivateAccountView(View):
         return render(request, 'users/activation_failure.html', {
             'reason': 'Invalid or expired token'
         })
-    
 
 
 #! Resend activation email view
@@ -157,8 +164,7 @@ class ResendActivationEmailView(View):
                 return render(request, 'users/activation_failure.html', {'error': 'Failed to send email'})
         except Users.DoesNotExist:
             return render(request, 'users/activation_failure.html', {'error': 'No unverified account found with this email'})
-    
-    
+
 
 #! Edit view for user profile and account settings
 class EditView(View):
@@ -307,8 +313,6 @@ class CustomPasswordChangeView(View):
             'form': form,
             'password_changed': False
         })
-
-
 
 
 def sign_in(request):
@@ -473,10 +477,10 @@ class AdminExportDonationsView(AdminRequiredMixin, View):
     def get(self, request):
         response = HttpResponse(content_type='text/csv')
         response['Content-Disposition'] = 'attachment; filename="donations.csv"'
-        
+
         writer = csv.writer(response)
         writer.writerow(['Project Title', 'Donor Email', 'Amount', 'Date'])
-        
+
         donations = Donation.objects.all().order_by('-donated_at')
         for donation in donations:
             writer.writerow([
@@ -485,6 +489,23 @@ class AdminExportDonationsView(AdminRequiredMixin, View):
                 donation.amount,
                 donation.donated_at.strftime('%Y-%m-%d %H:%M:%S')
             ])
-            
+
         return response
 
+
+class DeleteAccountView(LoginRequiredMixin, View):
+    def post(self, request):
+        password = request.POST.get("password")
+        user = request.user
+
+        # Verify the password
+        if not user.check_password(password):
+            messages.error(request, "Incorrect password. Account deletion canceled.")
+            return redirect("edit")
+
+        # Log the user out and delete their account
+        auth_logout(request)
+        user.delete()
+
+        messages.success(request, "Your account has been permanently deleted.")
+        return redirect("home")
