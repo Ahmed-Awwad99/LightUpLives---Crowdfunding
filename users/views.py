@@ -2,14 +2,13 @@ from datetime import timedelta
 from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout, update_session_auth_hash
-from django.contrib.auth.decorators import login_required, user_passes_test
+from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import PasswordResetForm, SetPasswordForm, PasswordChangeForm
 from django.contrib.auth.mixins import UserPassesTestMixin
-from django.core.mail import send_mail, EmailMultiAlternatives
-from django.db.models import Sum, Count
+from django.core.mail import send_mail
+from django.db.models import Sum
 from django.http import HttpResponse
 from django.shortcuts import render, redirect, get_object_or_404
-from django.template.loader import render_to_string
 from django.utils.encoding import force_bytes, force_str
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.utils.timezone import now
@@ -40,13 +39,12 @@ def my_donations(request):
 def send_activation_email(request, user):
     user.token_created_at = now()
     user.save(update_fields=['token_created_at'])
-
     domain = request.get_host()
     subject = "Please Activate Your Account"
     message = f"""Please activate your account by visiting: 
 http://{domain}/users/activate/{urlsafe_base64_encode(force_bytes(user.pk))}/{account_token.make_token(user)}/
 
-Note: This activation link will expire in 30 seconds."""
+Note: This activation link will expire in 1 day."""
 
     try:
         send_mail(
@@ -65,22 +63,19 @@ class RegisterView(View):
     def get(self, request):
         user_form = UserRegistrationForm()
         return render(request, 'users/sign_up.html', {"user_form": user_form})
-    def post(self, request):
-        
+    
+    def post(self, request):   
         user_form = UserRegistrationForm(request.POST, request.FILES)  # Include request.FILES to handle file uploads
         if user_form.is_valid():
             user_object = user_form.save(commit=False)
             user_object.set_password(user_form.cleaned_data['password'])
-            user_object.email_confirmed = False  #~ Set user unverfied until email confirmation
-            user_object.save()  #~ Just save the object without assignment
-            user = user_object  #~ Use the user_object directly
-            #~ Create the profile object after saving the user
+            user_object.email_confirmed = False  
+            user_object.save() 
+            user = user_object  
+          
             Profile.objects.create(user=user)
-            #~ Send activation email
             send_activation_email(request,user)
-            #~ Redirect to sign in page after successful registration
             return redirect('sign_in')  
-        #~ If the form is not valid, render the sign-up page with the form errors
         return render(request, 'users/sign_up.html', {"user_form": user_form})
 
 #! Login view with email authentication
@@ -105,7 +100,6 @@ class UserLoginView(View):
         return render(request, 'users/sign_in.html', {"form": form})
 
 #! The second part of the email verdfication process in register view
-
 class ActivateAccountView(View):
     def get(self, request, uidb64, token):
         try:
@@ -113,7 +107,6 @@ class ActivateAccountView(View):
             user = Users.objects.get(pk=uid)
         except (TypeError, ValueError, OverflowError, Users.DoesNotExist):
             user = None
-
         if user:
             expiration_time = user.token_created_at + timedelta(days=1)
             if now() > expiration_time:
@@ -134,7 +127,6 @@ class ActivateAccountView(View):
 #! Resend activation email view
 class ResendActivationEmailView(View):
     def get(self, request):
-        #? Pass any error message if it exists in the session
         error = request.session.pop('resend_error', None)
         return render(request, 'users/activation_failure.html', {'error': error})
 
@@ -143,22 +135,18 @@ class ResendActivationEmailView(View):
         if not email:
             return render(request, 'users/activation_failure.html', {'error': 'Please provide an email address'})
         user = Users.objects.get(email=email, email_confirmed=False)
-        print(user) # Get the current user
-        
-        if not email:
-            return render(request, 'users/activation_failure.html', {'error': 'Please provide an email address'})
+        print(user) 
             
         try:
             user = Users.objects.get(email=email, email_confirmed=False)
             send_activation_email(request, user)
-            email_sent = True  # Assuming the method doesn't return anything
+            email_sent = True 
             if email_sent:
                 return redirect('sign_in')
             else:
                 return render(request, 'users/activation_failure.html', {'error': 'Failed to send email'})
         except Users.DoesNotExist:
             return render(request, 'users/activation_failure.html', {'error': 'No unverified account found with this email'})
-
 
 #! Edit view for user profile and account settings
 class EditView(View):
@@ -169,14 +157,14 @@ class EditView(View):
         return render(request, 'users/edit.html', {
             'user_form': user_form, 
             'profile_form': profile_form,
-            'user': request.user,  # Pass the user object to the template
-            'categories': categories  # Pass categories to the template
+            'user': request.user, 
+            'categories': categories
         })
 
     def post(self, request):
         user_form = UserEditForm(
             data=request.POST,
-            files=request.FILES,  # Move request.FILES here since profile_picture is in Users model
+            files=request.FILES,  
             instance=request.user
         )
         profile_form = ProfileEditForm(
@@ -191,17 +179,15 @@ class EditView(View):
                 'user_form': user_form, 
                 'profile_form': profile_form, 
                 'success': True,
-                'user': request.user  # Pass the user object to the template
+                'user': request.user
             })
         else:
-            # Show form errors message
             messages.error(request, "Please correct the errors below.")
         return render(request, 'users/edit.html', {
             'user_form': user_form, 
             'profile_form': profile_form,
-            'user': request.user  # Pass the user object to the template
+            'user': request.user 
         })
-
 
 class CustomPasswordResetView(View):
     def get(self, request):
@@ -211,16 +197,13 @@ class CustomPasswordResetView(View):
         form = PasswordResetForm(request.POST)
         if form.is_valid():
             email = form.cleaned_data['email']
-            
-            # Get active users with this email
             associated_users = Users.objects.filter(email__iexact=email)
             
             if associated_users.exists():
                 user = associated_users.first()
-                # Use account_token from utilis like the activation view
+                domain = request.get_host()
                 subject = "Password Reset Request"
-                # Modify the URL to match your URL pattern for password reset confirmation
-                reset_url = f"http://localhost:8000/users/reset/{urlsafe_base64_encode(force_bytes(user.pk))}/{account_token.make_token(user)}/"
+                reset_url = f"http://{domain}/users/reset/{urlsafe_base64_encode(force_bytes(user.pk))}/{account_token.make_token(user)}/"
                 message = f"Please reset your password by clicking: {reset_url}"
                 html_message = f"""
                 <html>
@@ -238,7 +221,6 @@ class CustomPasswordResetView(View):
                 """
                 
                 try:
-                    # Send email with both text and HTML versions
                     send_mail(
                         subject,
                         message,
@@ -251,10 +233,8 @@ class CustomPasswordResetView(View):
                 except Exception as e:
                     print(f"Error sending password reset email: {e}")
             
-            # Always show success to prevent email enumeration
             return render(request, "users/password_reset.html", {"email_sent": True})
         return render(request, "users/password_reset.html", {"form": form})
-
 
 class CustomPasswordResetConfirmView(View):
     def get(self, request, uidb64, token):
@@ -283,7 +263,6 @@ class CustomPasswordResetConfirmView(View):
             return render(request, "users/password_reset_confirm.html", {"form": form, "valid_link": True})
         return render(request, "users/password_reset_confirm.html", {"valid_link": False})
 
-
 class CustomPasswordChangeView(View):
     def get(self, request):
         form = PasswordChangeForm(request.user)
@@ -296,7 +275,6 @@ class CustomPasswordChangeView(View):
         form = PasswordChangeForm(request.user, request.POST)
         if form.is_valid():
             user = form.save()
-            # Keep the user logged in
             update_session_auth_hash(request, user)
             messages.success(request, 'Your password was successfully updated!')
             return render(request, 'users/password_change.html', {
@@ -308,25 +286,6 @@ class CustomPasswordChangeView(View):
             'password_changed': False
         })
 
-
-def sign_in(request):
-    return render(request, 'users/sign_in.html')
-
-def sign_up(request):
-    return render(request, 'users/sign_up.html' )
-
-def account(request):
-    return render(request, 'users/account.html')
-
-def profile(request):
-    categories = Category.objects.all()
-    return render(request, 'users/profile.html',{"categories":categories})
-
-def custom_logout_view(request):
-    logout(request)
-    return redirect('sign_in')  # Redirect to the sign-in page after logout
-
-# Admin Dashboard Views
 class AdminRequiredMixin(UserPassesTestMixin):
     def test_func(self):
         return self.request.user.is_authenticated and self.request.user.is_staff
@@ -357,7 +316,6 @@ class AdminDashboardView(AdminRequiredMixin, View):
             'categories': categories,
             'stats': stats,
         }
-        
         return render(request, 'users/admin_dashboard.html', context)
 
 class AdminDeleteProjectView(AdminRequiredMixin, View):
@@ -492,14 +450,22 @@ class DeleteAccountView(LoginRequiredMixin, View):
         password = request.POST.get("password")
         user = request.user
 
-        # Verify the password
         if not user.check_password(password):
             messages.error(request, "Incorrect password. Account deletion canceled.")
             return redirect("edit")
 
-        # Log the user out and delete their account
         auth_logout(request)
         user.delete()
 
         messages.success(request, "Your account has been permanently deleted.")
         return redirect("home")
+
+
+def profile(request):
+    categories = Category.objects.all()
+    return render(request, 'users/profile.html',{"categories":categories})
+
+
+def custom_logout_view(request):
+    logout(request)
+    return redirect('sign_in')  
