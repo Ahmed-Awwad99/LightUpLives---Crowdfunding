@@ -1,7 +1,7 @@
 from django.urls import path
 from .views import *
 from django.contrib.auth import views as auth_views
-from .views import custom_logout_view
+from .views import custom_logout_view, my_projects, my_donations
 
 urlpatterns = [  # Changed name to "index"
     path("sign_in/", UserLoginView.as_view(), name="sign_in"),
@@ -81,6 +81,8 @@ urlpatterns = [  # Changed name to "index"
         AdminExportDonationsView.as_view(),
         name="admin_export_donations",
     ),
+    path("my-projects/", my_projects, name="my_projects"),
+    path("my-donations/", my_donations, name="my_donations"),
 ]
 # Set the login URL for the login_required decorator
 LOGIN_URL = "sign_in"

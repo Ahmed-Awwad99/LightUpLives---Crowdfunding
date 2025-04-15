@@ -21,6 +21,18 @@ from .models import Users, Profile
 from .utilis import account_token
 from projects.models import *
 
+@login_required
+def my_projects(request):
+    projects = Project.objects.filter(created_by=request.user)
+    categories = Category.objects.all() 
+    return render(request, 'users/my_projects.html', {'projects': projects, 'categories': categories})
+
+@login_required
+def my_donations(request):
+    donations = Donation.objects.filter(donor=request.user).select_related('project')
+    categories = Category.objects.all() 
+    return render(request, 'users/my_donations.html', {'donations': donations,'categories': categories})
+
 #! static method to use it in resend activation email view and register view
 @staticmethod
 def send_activation_email(request, user):
