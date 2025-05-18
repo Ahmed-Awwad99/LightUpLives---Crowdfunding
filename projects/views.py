@@ -299,15 +299,14 @@ class HomeView(View):
             projects, key=lambda p: p.average_rating(), reverse=True
         )[:5]
         latest_projects = projects.order_by("-created_at")[:5]
-        featured_projects = projects.filter(is_featured=True)[
-            :5
-        ]  # Get up to 5 featured projects
+        featured_projects = projects.filter(is_featured=True)[:5]
 
-        # Calculate funded amount for each project
-        for project in latest_projects:
-            project.funded_amount = (
-                project.donations.aggregate(Sum("amount"))["amount__sum"] or 0
-            )
+        # Calculate funded amount and progress for all project lists
+        for project_list in [latest_projects, top_rated_projects, featured_projects, all_projects]:
+            for project in project_list:
+                project.funded_amount = project.donations.aggregate(Sum("amount"))["amount__sum"] or 0
+                # Calculate progress percentage using a regular attribute name
+                project.progress = round((project.funded_amount / project.target * 100), 2) if project.target > 0 else 0
 
         return render(
             request,

@@ -18,7 +18,6 @@ class Project(models.Model):
     title = models.CharField(max_length=255)
     description = models.TextField()
     category = models.ForeignKey(Category, on_delete=models.CASCADE, related_name="projects")
-    target = models.DecimalField(max_digits=10, decimal_places=2)
     tags = models.ManyToManyField(Tag, blank=True, related_name="projects")
     start_date = models.DateField()
     end_date = models.DateField()
@@ -27,6 +26,8 @@ class Project(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
     cancelled = models.BooleanField(default=False)
     is_featured = models.BooleanField(default=False)
+    target = models.DecimalField(max_digits=10, decimal_places=2)
+    raised = models.DecimalField(max_digits=10, decimal_places=2, default=0.00)
 
     def __str__(self):
         return self.title
@@ -35,6 +36,12 @@ class Project(models.Model):
         ratings = self.ratings.all()
         if ratings.exists():
             return sum(rating.value for rating in ratings) / ratings.count()
+        return 0
+    
+    @property
+    def progress_percentage(self):
+        if self.target > 0:
+            return round((self.raised / self.target) * 100, 2)
         return 0
 
 
