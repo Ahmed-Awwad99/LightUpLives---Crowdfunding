@@ -54,7 +54,9 @@
                     <li class="nav-item me-3">
                         <form method="GET" action="{% url 'search_projects' %}" class="d-flex">
                             <input type="text" name="q" placeholder="Search" class="form-control me-2">
-                            <button type="submit" class="btn btn-outline-light">Search</button>
+                            <button type="submit" class="btn btn-outline-light d-flex align-items-center justify-content-center" style="width: 40px; height: 40px; padding: 0; border: none;">
+                                <i class="fas fa-search"></i>
+                            </button>
                         </form>
                     </li>
                     <li class="nav-item dropdown me-3">
